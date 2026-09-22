@@ -1,0 +1,20 @@
+{
+  "name": "book_ceep",
+  "version": "1.0.0",
+  "description": "projeto do Tcc, back end",
+  "license": "ISC",
+  "author": "Kamilly",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "mysql2": "^3.24.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
