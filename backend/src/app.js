@@ -17,6 +17,7 @@ const livroRoutes = require('./routes/livro.routes');
 const exemplarRoutes = require('./routes/exemplar.routes');
 const emprestimoRoutes = require('./routes/emprestimo.routes');
 const funcionarioRoutes = require('./routes/funcionario.routes');
+const relatorioRoutes = require('./routes/relatorio.routes');
 
 // Registro de prefixos de URL
 app.use('/', homeRoutes);
@@ -29,5 +30,6 @@ app.use('/livros', livroRoutes);
 app.use('/exemplares', exemplarRoutes);
 app.use('/emprestimos', emprestimoRoutes);
 app.use('/funcionarios', funcionarioRoutes);
+app.use('/api/relatorios', relatorioRoutes);
 
 module.exports = app;
