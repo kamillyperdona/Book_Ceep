@@ -1,12 +1,10 @@
-// backend/src/controllers/turma.controller.js
 const TurmaService = require('../services/turma.service');
 
+// Cadastrar nova turma (POST)
 async function criar(req, res, next) {
   try {
     const { nome, serie } = req.body;
 
-    // Se o usuário enviou 'nome' e 'serie', junta os dois (ex: "3º Ano - Desenvolvimento de Sistemas")
-    // Se enviou apenas 'nome', usa o 'nome' direto
     let nomeFinal = '';
     if (nome && serie) {
       nomeFinal = `${serie} - ${nome}`;
@@ -29,7 +27,43 @@ async function criar(req, res, next) {
   }
 }
 
+// Listar todas as turmas (GET)
+async function listar(req, res, next) {
+  try {
+    const turmas = await TurmaService.listar();
+    return res.status(200).json({
+      sucesso: true,
+      data: turmas
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// Buscar turma por ID (GET /:id)
+async function buscarPorId(req, res, next) {
+  try {
+    const { id } = req.params;
+    const turma = await TurmaService.buscarPorId(id);
+
+    if (!turma) {
+      return res.status(404).json({
+        sucesso: false,
+        message: 'Turma não encontrada.'
+      });
+    }
+
+    return res.status(200).json({
+      sucesso: true,
+      data: turma
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   criar,
-  // ... mantenha as outras funções exportadas (listar, buscarPorId, etc)
+  listar,
+  buscarPorId
 };
