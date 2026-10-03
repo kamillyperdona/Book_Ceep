@@ -1,35 +1,29 @@
+// backend/src/app.js
 const express = require('express');
-const cors = require('cors');
-
 const app = express();
 
-app.use(cors());
+// Middlewares globais para parse de JSON
 app.use(express.json());
 
 // Importação das rotas
-const homeRoutes = require('./routes/home.routes');
-const turmaRoutes = require('./routes/turma.routes');
-const alunoRoutes = require('./routes/aluno.routes');
-const autorRoutes = require('./routes/autor.routes');
-const editoraRoutes = require('./routes/editora.routes');
-const generoRoutes = require('./routes/genero.routes');
+const turmaRoutes = require('./routes/turma.routes'); // <-- Verifique esta linha
 const livroRoutes = require('./routes/livro.routes');
-const exemplarRoutes = require('./routes/exemplar.routes');
 const emprestimoRoutes = require('./routes/emprestimo.routes');
-const funcionarioRoutes = require('./routes/funcionario.routes');
 const relatorioRoutes = require('./routes/relatorio.routes');
 
-// Registro de prefixos de URL
-app.use('/', homeRoutes);
-app.use('/turmas', turmaRoutes);
-app.use('/alunos', alunoRoutes);
-app.use('/autores', autorRoutes);
-app.use('/editoras', editoraRoutes);
-app.use('/generos', generoRoutes);
-app.use('/livros', livroRoutes);
-app.use('/exemplares', exemplarRoutes);
-app.use('/emprestimos', emprestimoRoutes);
-app.use('/funcionarios', funcionarioRoutes);
+// Mapeamento das rotas da API
+app.use('/api/turmas', turmaRoutes); // <-- Verifique se esta linha existe!
+app.use('/api/livros', livroRoutes);
+app.use('/api/emprestimos', emprestimoRoutes);
 app.use('/api/relatorios', relatorioRoutes);
+
+// Middleware de tratamento de erros (deve ser o último)
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.status || 500).json({
+    sucess: false,
+    message: err.message || 'Erro interno no servidor'
+  });
+});
 
 module.exports = app;
