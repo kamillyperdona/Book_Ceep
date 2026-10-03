@@ -1,8 +1,12 @@
-const { Router } = require('express');
-const livroController = require('../controllers/livro.controller');
+// backend/src/routes/livro.routes.js
+const express = require('express');
+const router = express.Router();
+const LivroController = require('../controllers/livro.controller');
 
-const router = Router();
-router.get('/', livroController.listar);
-router.post('/', livroController.criar);
+// Exemplo de chamada: GET /api/livros?titulo=Dom&genero=Romance
+router.get('/', LivroController.buscar);
+
+// Detalhes dos exemplares de um livro especifico: GET /api/livros/1/exemplares
+router.get('/:id/exemplares', LivroController.listarExemplares);
 
 module.exports = router;
