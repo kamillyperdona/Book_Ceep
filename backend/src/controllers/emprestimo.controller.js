@@ -1,28 +1,35 @@
-const emprestimoService = require('../services/emprestimo.service');
+// backend/src/controllers/emprestimo.controller.js
+const EmprestimoService = require('../services/emprestimo.service');
 
 class EmprestimoController {
-  async criar(req, res) {
+  static async criar(req, res, next) {
     try {
-      const id = await emprestimoService.realizarEmprestimo(req.body);
-      return res.status(201).json({ 
-        success: true,
-        message: 'Empréstimo realizado com sucesso!', 
-        id 
-      });
+      const { id_aluno, id_exemplar, id_funcionario } = req.body;
+      const resultado = await EmprestimoService.realizarEmprestimo(id_aluno, id_exemplar, id_funcionario);
+      res.status(201).json({ sucess: true, data: resultado });
     } catch (error) {
-      return res.status(400).json({ success: false, error: error.message });
+      next(error);
     }
   }
 
-  async devolver(req, res) {
+  static async devolver(req, res, next) {
     try {
       const { id } = req.params;
-      const resultado = await emprestimoService.registrarDevolucao(id, req.body);
-      return res.status(200).json({ success: true, ...resultado });
+      const resultado = await EmprestimoService.registrarDevolucao(id);
+      res.status(200).json({ sucess: true, ...resultado });
     } catch (error) {
-      return res.status(400).json({ success: false, error: error.message });
+      next(error);
+    }
+  }
+
+  static async listarAtivos(req, res, next) {
+    try {
+      const emprestimos = await EmprestimoService.listarAtivos();
+      res.status(200).json({ sucess: true, data: emprestimos });
+    } catch (error) {
+      next(error);
     }
   }
 }
 
-module.exports = new EmprestimoController();
+module.exports = EmprestimoController;
