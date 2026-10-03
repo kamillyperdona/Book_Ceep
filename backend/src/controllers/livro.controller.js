@@ -1,22 +1,35 @@
-const livroService = require('../services/livro.service');
+// backend/src/controllers/livro.controller.js
+const LivroService = require('../services/livro.service');
 
 class LivroController {
-  async listar(req, res) {
+  static async buscar(req, res, next) {
     try {
-      const livros = await livroService.listar();
-      return res.status(200).json(livros);
+      const { titulo, autor, genero } = req.query;
+      const livros = await LivroService.buscarComFiltros({ titulo, autor, genero });
+      
+      res.status(200).json({
+        sucess: true,
+        total: livros.length,
+        data: livros
+      });
     } catch (error) {
-      return res.status(500).json({ error: error.message });
+      next(error);
     }
   }
-  async criar(req, res) {
+
+  static async listarExemplares(req, res, next) {
     try {
-      const isbn = await livroService.criar(req.body);
-      return res.status(201).json({ message: 'Livro cadastrado com sucesso!', isbn });
+      const { id } = req.params;
+      const exemplares = await LivroService.buscarExemplaresPorLivro(id);
+      
+      res.status(200).json({
+        sucess: true,
+        data: exemplares
+      });
     } catch (error) {
-      return res.status(400).json({ error: error.message });
+      next(error);
     }
   }
 }
 
-module.exports = new LivroController();
+module.exports = LivroController;
