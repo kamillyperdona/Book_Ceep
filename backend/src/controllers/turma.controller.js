@@ -1,53 +1,35 @@
-const turmaService = require('../services/turma.service');
+// backend/src/controllers/turma.controller.js
+const TurmaService = require('../services/turma.service');
 
-class TurmaController {
-  async listar(req, res) {
-    try {
-      const turmas = await turmaService.listarTurmas();
-      return res.status(200).json(turmas);
-    } catch (error) {
-      return res.status(500).json({ error: error.message });
-    }
-  }
+async function criar(req, res, next) {
+  try {
+    const { nome, serie } = req.body;
 
-  async buscarPorId(req, res) {
-    try {
-      const { id } = req.params;
-      const turma = await turmaService.buscarTurmaPorId(id);
-      return res.status(200).json(turma);
-    } catch (error) {
-      return res.status(404).json({ error: error.message });
+    // Se o usuário enviou 'nome' e 'serie', junta os dois (ex: "3º Ano - Desenvolvimento de Sistemas")
+    // Se enviou apenas 'nome', usa o 'nome' direto
+    let nomeFinal = '';
+    if (nome && serie) {
+      nomeFinal = `${serie} - ${nome}`;
+    } else if (nome) {
+      nomeFinal = nome;
+    } else {
+      return res.status(400).json({
+        error: 'O campo nome da turma é obrigatório.'
+      });
     }
-  }
 
-  async criar(req, res) {
-    try {
-      await turmaService.criarTurma(req.body);
-      return res.status(201).json({ message: 'Turma cadastrada com sucesso!' });
-    } catch (error) {
-      return res.status(400).json({ error: error.message });
-    }
-  }
+    const novaTurma = await TurmaService.criar({ nome: nomeFinal });
 
-  async atualizar(req, res) {
-    try {
-      const { id } = req.params;
-      await turmaService.atualizarTurma(id, req.body);
-      return res.status(200).json({ message: 'Turma atualizada com sucesso!' });
-    } catch (error) {
-      return res.status(400).json({ error: error.message });
-    }
-  }
-
-  async deletar(req, res) {
-    try {
-      const { id } = req.params;
-      await turmaService.deletarTurma(id);
-      return res.status(200).json({ message: 'Turma removida com sucesso!' });
-    } catch (error) {
-      return res.status(404).json({ error: error.message });
-    }
+    return res.status(201).json({
+      sucesso: true,
+      data: novaTurma
+    });
+  } catch (error) {
+    next(error);
   }
 }
 
-module.exports = new TurmaController();
+module.exports = {
+  criar,
+  // ... mantenha as outras funções exportadas (listar, buscarPorId, etc)
+};
