@@ -1,12 +1,12 @@
-const { Router } = require('express');
-const turmaController = require('../controllers/turma.controller');
+// backend/src/routes/turma.routes.js
+const express = require('express');
+const router = express.Router();
+const TurmaController = require('../controllers/turma.controller');
 
-const router = Router();
+// Rota POST para cadastrar turma: POST /api/turmas
+router.post('/', TurmaController.criar);
 
-router.get('/', turmaController.listar);
-router.get('/:id', turmaController.buscarPorId);
-router.post('/', turmaController.criar);
-router.put('/:id', turmaController.atualizar);
-router.delete('/:id', turmaController.deletar);
+// Rota GET para listar turmas: GET /api/turmas
+router.get('/', TurmaController.listar);
 
 module.exports = router;
