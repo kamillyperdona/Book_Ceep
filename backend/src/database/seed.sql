@@ -1,32 +1,53 @@
 -- ============================================================
--- Dados de exemplo (seed) para testar o sistema
+-- Dados de exemplo (seed) para a Biblioteca Book_Ceep
 -- Rode DEPOIS do schema.sql
 -- ============================================================
-USE controle_estoque;
+USE book_ceep;
 
--- Usuario de teste
--- Email: admin@estoque.com | Senha: 123456
--- O hash abaixo foi gerado com bcrypt para a senha &quot;123456&quot;.
-INSERT INTO usuarios (nome, email, senha_hash) VALUES
-('Administrador', 'admin@estoque.com',
-'$2a$10$Pzk56Ifp9RBmCo/YWXezOu13s92v50WGsoHeX/RUwBo7YKNOmvEQ.');
+-- Turmas
+INSERT INTO turmas (nome) VALUES
+('1º Ano - Desenvolvimento de Sistemas'),
+('2º Ano - Desenvolvimento de Sistemas'),
+('3º Ano - Desenvolvimento de Sistemas');
 
--- Categorias
-INSERT INTO categorias (nome, descricao) VALUES
-('Bebidas', 'Refrigerantes, sucos e aguas'),
-('Limpeza', 'Produtos de higiene e limpeza'),
-('Papelaria', 'Material de escritorio');
+-- Alunos
+INSERT INTO alunos (nome, matricula, id_turma) VALUES
+('Kamilly Perdoná', '2026001', 3),
+('Pietra Pedro', '2026002', 2),
+('Bianca Bucker', '2026003', 1);
 
--- Produtos
-INSERT INTO produtos (nome, descricao, preco, quantidade, estoque_minimo, categoria_id) VALUES
-('Agua Mineral 500ml', 'Garrafa 500ml', 2.50, 120, 20, 1),
-('Refrigerante Cola 2L','Garrafa 2 litros', 8.90, 40, 10, 1),
-('Detergente Neutro', 'Frasco 500ml', 3.20, 60, 15, 2),
-('Papel A4 500 folhas','Resma branca', 24.90, 15, 5, 3);
+-- Funcionários
+INSERT INTO funcionarios (nome, cargo) VALUES
+('Ana Bibliotecária', 'Atendente'),
+('Roberto Souza', 'Administrador');
 
--- Movimentacoes de exemplo (usuario 1 = Administrador)
-INSERT INTO movimentacoes (produto_id, usuario_id, tipo, quantidade, observacao) VALUES
-(1, 1, 'ENTRADA', 100, 'Compra inicial'),
-(1, 1, 'SAIDA', 10, 'Venda balcao'),
-(2, 1, 'ENTRADA', 40, 'Reposicao'),
-(4, 1, 'SAIDA', 3, 'Uso interno');
+-- Autores
+INSERT INTO autores (nome) VALUES
+('Machado de Assis'),
+('George Orwell'),
+('Clarice Lispector');
+
+-- Editoras
+INSERT INTO editoras (nome) VALUES
+('Companhia das Letras'),
+('Penguin Classic'),
+('Rocco');
+
+-- Gêneros
+INSERT INTO generos (nome) VALUES
+('Romance'),
+('Ficção Científica'),
+('Literatura Brasileira');
+
+-- Livros
+INSERT INTO livros (titulo, isbn, ano_publicacao, id_autor, id_editora, id_genero) VALUES
+('Dom Casmurro', '9788535914849', 1899, 1, 1, 3),
+('1984', '9788535902778', 1949, 2, 2, 2),
+('A Hora da Estrela', '9788532511010', 1977, 3, 3, 1);
+
+-- Exemplares
+INSERT INTO exemplares (id_livro, tombo, localizacao, status) VALUES
+(1, 'T-001', 'Estante A1', 'disponivel'),
+(1, 'T-002', 'Estante A1', 'disponivel'),
+(2, 'T-003', 'Estante B2', 'disponivel'),
+(3, 'T-004', 'Estante C1', 'disponivel');
