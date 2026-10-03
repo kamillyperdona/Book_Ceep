@@ -1,95 +1,126 @@
-const EmprestimoModel = require('../models/emprestimo.model');
+// backend/src/services/emprestimo.service.js
 const db = require('../config/db');
 
 class EmprestimoService {
-  async realizarEmprestimo(data) {
-    const { CGM, id_exemplar } = data;
-
-    // 1. Validar se o Aluno existe e se não está suspenso
-    const [alunos] = await db.query('SELECT CGM, status, suspenso_ate FROM aluno WHERE CGM = ?', [CGM]);
-    if (alunos.length === 0) throw new Error('Aluno não encontrado.');
+  // Realizar novo empréstimo
+  static async realizarEmprestimo(id_aluno, id_exemplar, id_funcionario) {
+    const connection = await db.getConnection();
     
-    const aluno = alunos[0];
-    if (aluno.status !== 'ATIVO') throw new Error('Aluno com cadastro inativo.');
+    try {
+      await connection.beginTransaction();
 
-    // Trava de suspensão por atraso anterior
-    if (aluno.suspenso_ate && new Date(aluno.suspenso_ate) > new Date()) {
-      const dataFormatada = new Date(aluno.suspenso_ate).toLocaleDateString('pt-BR');
-      throw new Error(`Aluno suspenso de realizar novos empréstimos até ${dataFormatada} devido a atraso anterior.`);
+      // 1. Verificar se o exemplar existe e está disponível
+      const [exemplares] = await connection.query(
+        'SELECT status FROM exemplares WHERE id = ?', 
+        [id_exemplar]
+      );
+
+      if (exemplares.length === 0) {
+        throw new Error('Exemplar não encontrado.');
+      }
+
+      if (exemplares[0].status !== 'disponivel') {
+        throw new Error('Este exemplar não está disponível para empréstimo.');
+      }
+
+      // 2. Calcular datas (Empréstimo: Hoje | Devolução prevista: +7 dias)
+      const dataEmprestimo = new Date();
+      const dataDevolucaoPrevista = new Date();
+      dataDevolucaoPrevista.setDate(dataEmprestimo.getDate() + 7);
+
+      // 3. Registrar o empréstimo
+      const [resultado] = await connection.query(
+        `INSERT INTO emprestimos 
+         (id_aluno, id_exemplar, id_funcionario, data_emprestimo, data_devolucao_prevista, status) 
+         VALUES (?, ?, ?, ?, ?, 'ativo')`,
+        [id_aluno, id_exemplar, id_funcionario, dataEmprestimo, dataDevolucaoPrevista]
+      );
+
+      // 4. Atualizar status do exemplar para 'emprestado'
+      await connection.query(
+        "UPDATE exemplares SET status = 'emprestado' WHERE id = ?",
+        [id_exemplar]
+      );
+
+      await connection.commit();
+      return { id: resultado.insertId, status: 'ativo', dataDevolucaoPrevista };
+
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
     }
-
-    // 2. Trava de 1 livro por aluno (Verifica se já tem empréstimo ATIVO)
-    const [emprestimosAtivos] = await db.query(
-      "SELECT id_emprestimo FROM emprestimo WHERE CGM = ? AND status = 'ATIVO'",
-      [CGM]
-    );
-    if (emprestimosAtivos.length > 0) {
-      throw new Error('O aluno já possui um livro emprestado. É necessário devolvê-lo antes de retirar outro.');
-    }
-
-    // 3. Validar se o exemplar está disponível
-    const [exemplares] = await db.query('SELECT status FROM exemplar WHERE id_exemplar = ?', [id_exemplar]);
-    if (exemplares.length === 0) throw new Error('Exemplar não encontrado.');
-    if (exemplares[0].status !== 'DISPONIVEL') {
-      throw new Error('Exemplar indisponível para empréstimo.');
-    }
-
-    // 4. Marca o exemplar como EMPRESTADO
-    await db.query("UPDATE exemplar SET status = 'EMPRESTADO' WHERE id_exemplar = ?", [id_exemplar]);
-
-    // 5. Registra o empréstimo
-    return await EmprestimoModel.criar(data);
   }
 
-  async registrarDevolucao(id_emprestimo, dadosDevolucao) {
-    const { observacao, justificativa } = dadosDevolucao;
+  // Registrar devolução do exemplar
+  static async registrarDevolucao(id_emprestimo) {
+    const connection = await db.getConnection();
 
-    const emprestimo = await EmprestimoModel.getById(id_emprestimo);
-    if (!emprestimo) throw new Error('Empréstimo não encontrado.');
-    if (emprestimo.status === 'CONCLUIDO') throw new Error('Este empréstimo já foi devolvido.');
+    try {
+      await connection.beginTransaction();
 
-    const hoje = new Date();
-    const dataPrevista = new Date(emprestimo.data_prevista_devolucao);
+      // 1. Buscar dados do empréstimo ativo
+      const [emprestimos] = await connection.query(
+        "SELECT id_exemplar, status FROM emprestimos WHERE id = ?",
+        [id_emprestimo]
+      );
 
-    hoje.setHours(0, 0, 0, 0);
-    dataPrevista.setHours(0, 0, 0, 0);
-
-    // Calcula se houve atraso
-    const diffTempo = hoje.getTime() - dataPrevista.getTime();
-    const diasAtraso = Math.ceil(diffTempo / (1000 * 3600 * 24));
-
-    let mensagemPenalidade = '';
-
-    // Aplica a lógica da Penalidade (1 dia de atraso = 7 dias / 1 semana sem pegar livro)
-    if (diasAtraso > 0) {
-      if (justificativa && justificativa.trim() !== '') {
-        mensagemPenalidade = `Devolução entregue com ${diasAtraso} dia(s) de atraso, mas a penalidade foi abonada devido à justificativa.`;
-      } else {
-        const diasPenalidade = diasAtraso * 7;
-        const dataFimSuspensao = new Date();
-        dataFimSuspensao.setDate(dataFimSuspensao.getDate() + diasPenalidade);
-
-        // Atualiza a data de suspensão do aluno no banco
-        await db.query('UPDATE aluno SET suspenso_ate = ? WHERE CGM = ?', [dataFimSuspensao, emprestimo.CGM]);
-
-        const dataFormatada = dataFimSuspensao.toLocaleDateString('pt-BR');
-        mensagemPenalidade = `Devolução realizada com ${diasAtraso} dia(s) de atraso. O aluno foi suspenso por ${diasPenalidade} dias (até ${dataFormatada}).`;
+      if (emprestimos.length === 0) {
+        throw new Error('Empréstimo não encontrado.');
       }
+
+      if (emprestimos[0].status === 'concluido') {
+        throw new Error('Este empréstimo já foi finalizado.');
+      }
+
+      const id_exemplar = emprestimos[0].id_exemplar;
+
+      // 2. Atualizar empréstimo com a data real de devolução
+      const dataDevolucaoReal = new Date();
+      await connection.query(
+        "UPDATE emprestimos SET data_devolucao_real = ?, status = 'concluido' WHERE id = ?",
+        [dataDevolucaoReal, id_emprestimo]
+      );
+
+      // 3. Liberar o exemplar para novos empréstimos
+      await connection.query(
+        "UPDATE exemplares SET status = 'disponivel' WHERE id = ?",
+        [id_exemplar]
+      );
+
+      await connection.commit();
+      return { mensagem: 'Devolução registrada com sucesso.' };
+
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
     }
+  }
 
-    // Libera o exemplar no banco de dados
-    await db.query("UPDATE exemplar SET status = 'DISPONIVEL' WHERE id_exemplar = ?", [emprestimo.id_exemplar]);
-
-    // Atualiza a devolução no banco
-    await EmprestimoModel.devolver(id_emprestimo, observacao, justificativa);
-
-    return {
-      message: 'Devolução registrada com sucesso!',
-      atraso: diasAtraso > 0,
-      diasAtraso: diasAtraso > 0 ? diasAtraso : 0,
-      detalhesPenalidade: mensagemPenalidade
-    };
+  // Listar empréstimos ativos com detalhes do aluno e do livro
+  static async listarAtivos() {
+    const query = `
+      SELECT 
+        e.id, 
+        a.nome AS aluno_nome, 
+        a.matricula AS aluno_matricula, 
+        l.titulo AS livro_titulo, 
+        ex.tombo AS exemplar_tombo,
+        e.data_emprestimo, 
+        e.data_devolucao_prevista
+      FROM emprestimos e
+      JOIN alunos a ON e.id_aluno = a.id
+      JOIN exemplares ex ON e.id_exemplar = ex.id
+      JOIN livros l ON ex.id_livro = l.id
+      WHERE e.status = 'ativo'
+      ORDER BY e.data_devolucao_prevista ASC
+    `;
+    const [rows] = await db.query(query);
+    return rows;
   }
 }
 
-module.exports = new EmprestimoService();
+module.exports = EmprestimoService;
