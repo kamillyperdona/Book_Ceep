@@ -2,39 +2,44 @@ const db = require('../config/db');
 
 class AlunoModel {
   static async getAll() {
-    const [rows] = await db.query(`
-      SELECT a.*, t.nome_turma, t.serie 
-      FROM aluno a 
-      LEFT JOIN turma t ON a.id_turma = t.id_turma
-    `);
+    // Consulta simples na tabela de alunos
+    const [rows] = await db.query('SELECT * FROM alunos');
     return rows;
   }
 
   static async getByCgm(cgm) {
-    const [rows] = await db.query('SELECT * FROM aluno WHERE CGM = ?', [cgm]);
+    const [rows] = await db.query('SELECT * FROM alunos WHERE matricula = ?', [cgm]);
     return rows[0];
   }
 
   static async create(data) {
-    const { CGM, nome_aluno, email, telefone, status, id_turma } = data;
+    const { matricula, CGM, nome, nome_aluno, turma_id, id_turma } = data;
+    
+    const mat = matricula || CGM;
+    const nomeAluno = nome || nome_aluno;
+    const turmaId = id_turma || turma_id;
+
     const [result] = await db.query(
-      'INSERT INTO aluno (CGM, nome_aluno, email, telefone, status, id_turma) VALUES (?, ?, ?, ?, ?, ?)',
-      [CGM, nome_aluno, email, telefone, status || 'ATIVO', id_turma]
+      'INSERT INTO alunos (matricula, nome, id_turma) VALUES (?, ?, ?)',
+      [mat, nomeAluno, turmaId || null]
     );
-    return result;
+    return { id: result.insertId, matricula: mat, nome: nomeAluno, id_turma: turmaId };
   }
 
   static async update(cgm, data) {
-    const { nome_aluno, email, telefone, status, id_turma } = data;
+    const { nome, nome_aluno, turma_id, id_turma } = data;
+    const nomeAluno = nome || nome_aluno;
+    const turmaId = id_turma || turma_id;
+
     const [result] = await db.query(
-      'UPDATE aluno SET nome_aluno = ?, email = ?, telefone = ?, status = ?, id_turma = ? WHERE CGM = ?',
-      [nome_aluno, email, telefone, status, id_turma, cgm]
+      'UPDATE alunos SET nome = ?, id_turma = ? WHERE matricula = ?',
+      [nomeAluno, turmaId, cgm]
     );
     return result;
   }
 
   static async delete(cgm) {
-    const [result] = await db.query('DELETE FROM aluno WHERE CGM = ?', [cgm]);
+    const [result] = await db.query('DELETE FROM alunos WHERE matricula = ?', [cgm]);
     return result;
   }
 }
