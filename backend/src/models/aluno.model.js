@@ -2,8 +2,17 @@ const db = require('../config/db');
 
 class AlunoModel {
   static async getAll() {
-    // Consulta simples na tabela de alunos
-    const [rows] = await db.query('SELECT * FROM alunos');
+    // Removida a coluna t.serie que não existe na tabela turmas
+    const [rows] = await db.query(`
+      SELECT 
+        a.id,
+        a.matricula,
+        a.nome,
+        a.id_turma,
+        t.nome AS nome_turma
+      FROM alunos a
+      LEFT JOIN turmas t ON a.id_turma = t.id
+    `);
     return rows;
   }
 
@@ -14,7 +23,6 @@ class AlunoModel {
 
   static async create(data) {
     const { matricula, CGM, nome, nome_aluno, turma_id, id_turma } = data;
-    
     const mat = matricula || CGM;
     const nomeAluno = nome || nome_aluno;
     const turmaId = id_turma || turma_id;
