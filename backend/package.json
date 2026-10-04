@@ -1,7 +1,7 @@
 {
   "name": "book_ceep",
   "version": "1.0.0",
-  "description": "projeto do Tcc, back end",
+  "description": "projeto integrador, back end",
   "license": "ISC",
   "author": "Kamilly",
   "main": "src/server.js",
