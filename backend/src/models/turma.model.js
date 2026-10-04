@@ -1,25 +1,22 @@
 const db = require('../config/db');
 
-async function criar({ nome }) {
-  const [result] = await db.execute(
-    'INSERT INTO turmas (nome) VALUES (?)',
-    [nome]
-  );
-  return { id: result.insertId, nome };
+class TurmaModel {
+  static async getAll() {
+    const [rows] = await db.query('SELECT * FROM turmas');
+    return rows;
+  }
+
+  static async create(data) {
+    const { nome } = data;
+    const [result] = await db.query('INSERT INTO turmas (nome) VALUES (?)', [nome]);
+    return { id: result.insertId, nome };
+  }
+
+  static async update(id, data) {
+    const { nome } = data;
+    const [result] = await db.query('UPDATE turmas SET nome = ? WHERE id = ?', [nome, id]);
+    return result;
+  }
 }
 
-async function listar() {
-  const [rows] = await db.execute('SELECT * FROM turmas');
-  return rows;
-}
-
-async function buscarPorId(id) {
-  const [rows] = await db.execute('SELECT * FROM turmas WHERE id = ?', [id]);
-  return rows[0] || null;
-}
-
-module.exports = {
-  criar,
-  listar,
-  buscarPorId
-};
+module.exports = TurmaModel;
