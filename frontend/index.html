@@ -1,34 +1,45 @@
-async function carregarTurmas() {
-  try {
-    const res = await fetch(`${API_URL}/turmas`);
-    const turmas = await res.json();
-    const lista = document.getElementById('listaTurmas');
-    lista.innerHTML = '';
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book CEEP - Sistema da Biblioteca</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-    turmas.forEach(t => {
-      const li = document.createElement('li');
-      li.style.display = 'flex';
-      li.style.justifyContent = 'space-between';
-      li.style.alignItems = 'center';
+  <header>
+    <h1>Book CEEP - Painel de Controle</h1>
+  </header>
 
-      li.innerHTML = `
-        <span>ID: ${t.id} - Nome: ${t.nome}</span>
-        <button onclick="deletarTurma(${t.id})" class="btn-delete">Excluir</button>
-      `;
-      lista.appendChild(li);
-    });
-  } catch (error) {
-    console.error('Erro ao carregar turmas:', error);
-  }
-}
+  <main class="container">
+    
+    <!-- SESSÃO DE TURMAS -->
+    <section class="card">
+      <h2>1. Gerenciar Turmas</h2>
+      <form id="formTurma">
+        <input type="text" id="nomeTurma" placeholder="Nome da Turma (Ex: 3º Ano A)" required>
+        <button type="submit">Cadastrar Turma</button>
+      </form>
+      <h3>Turmas Cadastradas</h3>
+      <ul id="listaTurmas"></ul>
+    </section>
 
-async function deletarTurma(id) {
-  if (confirm('Deseja realmente apagar esta turma?')) {
-    try {
-      const res = await fetch(`${API_URL}/turmas/${id}`, { method: 'DELETE' });
-      if (res.ok) carregarTurmas();
-    } catch (error) {
-      alert('Erro ao apagar turma.');
-    }
-  }
-}
+    <!-- SESSÃO DE ALUNOS -->
+    <section class="card">
+      <h2>2. Gerenciar Alunos</h2>
+      <form id="formAluno">
+        <input type="text" id="nomeAluno" placeholder="Nome Completo" required>
+        <input type="text" id="matriculaAluno" placeholder="Matrícula/CGM" required>
+        <input type="number" id="idTurmaAluno" placeholder="ID da Turma" required>
+        <button type="submit">Cadastrar Aluno</button>
+      </form>
+      <h3>Alunos Cadastrados</h3>
+      <ul id="listaAlunos"></ul>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
