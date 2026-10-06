@@ -1,0 +1,34 @@
+async function carregarTurmas() {
+  try {
+    const res = await fetch(`${API_URL}/turmas`);
+    const turmas = await res.json();
+    const lista = document.getElementById('listaTurmas');
+    lista.innerHTML = '';
+
+    turmas.forEach(t => {
+      const li = document.createElement('li');
+      li.style.display = 'flex';
+      li.style.justifyContent = 'space-between';
+      li.style.alignItems = 'center';
+
+      li.innerHTML = `
+        <span>ID: ${t.id} - Nome: ${t.nome}</span>
+        <button onclick="deletarTurma(${t.id})" class="btn-delete">Excluir</button>
+      `;
+      lista.appendChild(li);
+    });
+  } catch (error) {
+    console.error('Erro ao carregar turmas:', error);
+  }
+}
+
+async function deletarTurma(id) {
+  if (confirm('Deseja realmente apagar esta turma?')) {
+    try {
+      const res = await fetch(`${API_URL}/turmas/${id}`, { method: 'DELETE' });
+      if (res.ok) carregarTurmas();
+    } catch (error) {
+      alert('Erro ao apagar turma.');
+    }
+  }
+}
