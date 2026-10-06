@@ -37,6 +37,16 @@ const TurmaController = {
     } catch (error) {
       next(error);
     }
+  },
+
+  async deletar(req, res, next) {
+  try {
+    const { id } = req.params;
+    await TurmaModel.delete(id);
+    return res.status(200).json({ sucess: true, message: 'Turma removida com sucesso!' });
+  } catch (error) {
+    next(error);
+  }
   }
 };
 

@@ -17,6 +17,11 @@ class TurmaModel {
     const [result] = await db.query('UPDATE turmas SET nome = ? WHERE id = ?', [nome, id]);
     return result;
   }
+  
+  static async delete(id) {
+  const [result] = await db.query('DELETE FROM turmas WHERE id = ?', [id]);
+  return result;
+  }
 }
 
 module.exports = TurmaModel;
