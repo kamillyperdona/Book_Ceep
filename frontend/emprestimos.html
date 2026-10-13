@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Empréstimo - BookCeep</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-home">
+
+  <!-- NAVBAR SUPERIOR -->
+  <header class="navbar">
+    <div class="nav-left">
+      <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+      </svg>
+      <span class="logo-text">BookCeep</span>
+    </div>
+
+    <nav class="nav-links">
+      <a href="index.html">Início</a>
+      <a href="livros.html">Livro</a>
+      <a href="emprestimos.html" class="active">Empréstimo</a>
+      <a href="alunos.html">Aluno</a>
+    </nav>
+
+    <div class="user-badge">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      <span>Nome do funcionário</span>
+    </div>
+  </header>
+
+  <main class="main-content-wide">
+    <h1 class="page-title">Empréstimos</h1>
+    <p class="section-subtitle" style="margin-top: -15px; margin-bottom: 25px;">Alunos selecionados para consulta.</p>
+
+    <!-- BARRA DE BUSCA E AÇÕES -->
+    <div class="search-bar-row">
+      <div class="search-input-wrapper">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="inputBuscaEmprestimo" placeholder="Busque por alunos...">
+      </div>
+      <button class="btn-consultar" id="btnConsultarEmprestimo">Consultar</button>
+      <button class="btn-cadastrar-livro" id="btnOpenModalEmprestimo">+ Novo Empréstimo</button>
+    </div>
+
+    <!-- GRID DE EMPRÉSTIMOS -->
+    <div class="books-grid" id="gridEmprestimos" style="margin-top: 30px;">
+      <!-- Cards de empréstimos serão carregados aqui -->
+    </div>
+  </main>
+
+  <!-- MODAL DE REGISTRO DE EMPRÉSTIMO -->
+  <div class="modal-overlay" id="modalEmprestimo">
+    <div class="modal-card">
+      <h2>Registrar Empréstimo</h2>
+      <form id="formCadastrarEmprestimo">
+        <input type="number" id="idAluno" placeholder="ID do Aluno" required>
+        <input type="number" id="idExemplar" placeholder="ID do Livro / Exemplar" required>
+        <input type="number" id="idFuncionario" placeholder="ID do Funcionário" value="1" required>
+        <div class="modal-buttons">
+          <button type="button" class="btn-cancel" id="btnCloseModalEmprestimo">Cancelar</button>
+          <button type="submit" class="btn-save">Registrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- RODAPÉ ESCURO -->
+  <footer class="footer-dark">
+    <div class="footer-content">
+      <h3>Biblioteca Escolar BookCeep</h3>
+      <p>&copy; 2026 Biblioteca Escolar BookCeep - Leitura para todos.</p>
+    </div>
+  </footer>
+
+  <script src="emprestimos.js"></script>
+</body>
+</html>
