@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo de Livros - BookCeep</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-home">
+
+  <!-- NAVBAR SUPERIOR -->
+  <header class="navbar">
+    <div class="nav-left">
+      <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+      </svg>
+      <span class="logo-text">BookCeep</span>
+    </div>
+
+    <nav class="nav-links">
+      <a href="index.html">Início</a>
+      <a href="livros.html" class="active">Livro</a>
+      <a href="emprestimos.html">Empréstimo</a>
+      <a href="alunos.html">Aluno</a>
+    </nav>
+
+    <div class="user-badge">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      <span>Nome do funcionário</span>
+    </div>
+  </header>
+
+  <main class="main-content-wide">
+    <h1 class="page-title">Explore o acervo da escola.</h1>
+
+    <!-- BARRA DE BUSCA E BOTÃO CONSULTAR -->
+    <div class="search-bar-row">
+      <div class="search-input-wrapper">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="inputBusca" placeholder="Busque por título, autor, assunto ou disciplina...">
+      </div>
+      <button class="btn-consultar" id="btnConsultar">Consultar</button>
+    </div>
+
+    <!-- BOTÃO CADASTRAR LIVRO + SELETOR DE ORDENAÇÃO -->
+    <div class="actions-bar">
+      <button class="btn-cadastrar-livro" id="btnOpenModal">+ Cadastrar livro</button>
+      <div class="sort-wrapper">
+        <label>Ordenar:</label>
+        <select id="selectOrdenacao">
+          <option value="mais_consultados">mais consultados</option>
+          <option value="recentes">mais recentes</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- ESTRUTURA COM FILTROS LATERAIS E GRID DE LIVROS -->
+    <div class="catalog-layout">
+      
+      <!-- SIDEBAR DE FILTROS -->
+      <aside class="sidebar-filters">
+        <h3>Filtros</h3>
+
+        <div class="filter-group">
+          <h4>Status do exemplar</h4>
+          <label><input type="checkbox" checked> Disponíveis para empréstimo <span>8.214</span></label>
+          <label><input type="checkbox"> Emprestados ou reservados <span>4.273</span></label>
+        </div>
+
+        <div class="filter-group">
+          <h4>Área de interesse</h4>
+          <label><input type="checkbox"> Literatura infantojuvenil <span>2.340</span></label>
+          <label><input type="checkbox"> Literatura clássica <span>3.120</span></label>
+          <label><input type="checkbox"> Ciências e tecnologia <span>1.570</span></label>
+          <label><input type="checkbox"> História e geografia <span>2.050</span></label>
+          <label><input type="checkbox"> Arte e literatura <span>1.220</span></label>
+        </div>
+
+        <div class="filter-group">
+          <h4>Tipo de material</h4>
+          <label><input type="checkbox" checked> Livros impressos <span>11.204</span></label>
+          <label><input type="checkbox"> Recursos digitais <span>1.282</span></label>
+        </div>
+      </aside>
+
+      <!-- SEÇÃO DO GRID DE LIVROS -->
+      <section class="catalog-content">
+        <div class="books-grid" id="gridLivrosCatalogo">
+          <!-- Livros vindos da API MySQL serão renderizados aqui -->
+        </div>
+
+        <!-- PAGINAÇÃO -->
+        <div class="pagination">
+          <button class="btn-page">&larr; Anterior</button>
+          <button class="btn-page active">1</button>
+          <button class="btn-page">2</button>
+          <button class="btn-page">3</button>
+          <span class="page-dots">...</span>
+          <button class="btn-page">2.001</button>
+          <button class="btn-page">Próxima &rarr;</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- MODAL PARA CADASTRAR NOVO LIVRO -->
+  <div class="modal-overlay" id="modalLivro">
+    <div class="modal-card">
+      <h2>Cadastrar Novo Livro</h2>
+      <form id="formCadastrarLivro">
+        <input type="text" id="tituloLivro" placeholder="Título do livro" required>
+        <input type="text" id="isbnLivro" placeholder="ISBN (Ex: 9788538081234)">
+        <input type="number" id="anoLivro" placeholder="Ano de publicação (Ex: 1899)">
+        <div class="modal-buttons">
+          <button type="button" class="btn-cancel" id="btnCloseModal">Cancelar</button>
+          <button type="submit" class="btn-save">Salvar no Banco</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- RODAPÉ ESCURO DO FIGMA -->
+  <footer class="footer-dark">
+    <div class="footer-content">
+      <h3>Biblioteca Escolar BookCeep</h3>
+      <p>&copy; 2026 Biblioteca Escolar BookCeep - Leitura para todos.</p>
+    </div>
+  </footer>
+
+  <script src="livros.js"></script>
+</body>
+</html>
