@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alunos - BookCeep</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-home">
+
+  <!-- NAVBAR SUPERIOR -->
+  <header class="navbar">
+    <div class="nav-left">
+      <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+      </svg>
+      <span class="logo-text">BookCeep</span>
+    </div>
+
+    <nav class="nav-links">
+      <a href="index.html">Início</a>
+      <a href="livros.html">Livro</a>
+      <a href="emprestimos.html">Empréstimo</a>
+      <a href="alunos.html" class="active">Aluno</a>
+    </nav>
+
+    <div class="user-badge">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      <span>Nome do funcionário</span>
+    </div>
+  </header>
+
+  <main class="main-content-wide">
+    <div class="title-row" style="margin-bottom: 25px;">
+      <div>
+        <h1 class="page-title" style="margin-bottom: 4px;">Aluno</h1>
+        <p class="section-subtitle" style="margin: 0;">Alunos selecionados para consulta.</p>
+      </div>
+      <button class="btn-cadastrar-livro" id="btnOpenModalAluno">+ Cadastrar novo Aluno</button>
+    </div>
+
+    <!-- GRID DE ALUNOS -->
+    <div class="books-grid" id="gridAlunos" style="margin-top: 20px;">
+      <!-- Cards dos alunos buscados do MySQL serão inseridos aqui -->
+    </div>
+  </main>
+
+  <!-- MODAL DE CADASTRO DE ALUNO -->
+  <div class="modal-overlay" id="modalAluno">
+    <div class="modal-card">
+      <h2>Cadastrar Novo Aluno</h2>
+      <form id="formCadastrarAluno">
+        <input type="text" id="nomeAluno" placeholder="Nome Completo do Aluno" required>
+        <input type="text" id="matriculaAluno" placeholder="Matrícula / CGM (Ex: 2026001)" required>
+        <input type="number" id="idTurmaAluno" placeholder="ID da Turma (Ex: 1)" required>
+        <div class="modal-buttons">
+          <button type="button" class="btn-cancel" id="btnCloseModalAluno">Cancelar</button>
+          <button type="submit" class="btn-save">Cadastrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- RODAPÉ ESCURO -->
+  <footer class="footer-dark">
+    <div class="footer-content">
+      <h3>Biblioteca Escolar BookCeep</h3>
+      <p>&copy; 2026 Biblioteca Escolar BookCeep - Leitura para todos.</p>
+    </div>
+  </footer>
+
+  <script src="alunos.js"></script>
+</body>
+</html>
