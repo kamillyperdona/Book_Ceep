@@ -150,3 +150,204 @@ h2 {
 .legal-text a:hover {
   text-decoration: underline;
 }
+/* Fundo Creme da Home do Figma */
+.bg-home {
+  background-color: #f7f5f0;
+  display: block;
+}
+
+/* NAVBAR */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 40px;
+  background-color: #f7f5f0;
+  border-bottom: 1px solid #e2ded4;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #1e2b37;
+}
+
+.logo-text {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #555555;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.nav-links a.active {
+  color: #111111;
+  font-weight: 600;
+}
+
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #e2ded4;
+  font-size: 0.8rem;
+  color: #333333;
+}
+
+/* MAIN CONTENT */
+.main-content {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.section-tag {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #888888;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title-row h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.2rem;
+  color: #111111;
+}
+
+.link-explore {
+  text-decoration: none;
+  color: #1e2b37;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.section-subtitle {
+  font-size: 0.85rem;
+  color: #666666;
+  margin-top: 6px;
+  margin-bottom: 30px;
+}
+
+/* GRID DE LIVROS */
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.book-card {
+  text-align: left;
+}
+
+.book-cover {
+  width: 100%;
+  height: 240px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Cores das capas baseadas no Figma */
+.cover-red { background-color: #a33b22; }
+.cover-beige { background-color: #d1b89d; color: #333333; }
+.cover-blue { background-color: #2b4b6f; }
+.cover-navy { background-color: #1a2a3a; }
+
+.book-cover h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.2rem;
+  margin-top: 8px;
+}
+
+.book-status {
+  font-size: 0.7rem;
+  color: #28a745;
+  margin-bottom: 4px;
+}
+
+.book-title-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111111;
+}
+
+.book-author {
+  font-size: 0.75rem;
+  color: #777777;
+}
+
+/* BANNER AZUL */
+.banner-blue {
+  background-color: #1e2b37;
+  color: #ffffff;
+  padding: 50px 40px;
+  margin-top: 60px;
+}
+
+.banner-header {
+  max-width: 1100px;
+  margin: 0 auto 30px auto;
+}
+
+.tag-light {
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  color: #a0aec0;
+}
+
+.banner-header p {
+  font-size: 1.1rem;
+  margin-top: 6px;
+}
+
+.steps-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.step-num {
+  font-size: 1.8rem;
+  font-family: 'Playfair Display', Georgia, serif;
+  opacity: 0.8;
+}
+
+.step-card h4 {
+  font-size: 0.95rem;
+  margin: 8px 0;
+}
+
+.step-card p {
+  font-size: 0.78rem;
+  color: #cbd5e0;
+  line-height: 1.4;
+}

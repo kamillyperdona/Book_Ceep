@@ -3,42 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Book CEEP - Sistema da Biblioteca</title>
+  <title>Início - BookCeep</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="bg-home">
 
-  <header>
-    <h1>Book CEEP - Painel de Controle</h1>
+  <!-- NAVBAR SUPERIOR -->
+  <header class="navbar">
+    <div class="nav-left">
+      <!-- Ícone do Livro em SVG -->
+      <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+      </svg>
+      <span class="logo-text">BookCeep</span>
+    </div>
+
+    <nav class="nav-links">
+      <a href="index.html" class="active">Início</a>
+      <a href="livros.html">Livro</a>
+      <a href="emprestimos.html">Empréstimo</a>
+      <a href="alunos.html">Aluno</a>
+    </nav>
+
+    <div class="user-badge">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      <span>Nome do funcionário</span>
+    </div>
   </header>
 
-  <main class="container">
+  <!-- CONTEÚDO PRINCIPAL (RECOMENDADOS) -->
+  <main class="main-content">
+    <div class="section-tag">LEITURAS RECOMENDADAS</div>
     
-    <!-- SESSÃO DE TURMAS -->
-    <section class="card">
-      <h2>1. Gerenciar Turmas</h2>
-      <form id="formTurma">
-        <input type="text" id="nomeTurma" placeholder="Nome da Turma (Ex: 3º Ano A)" required>
-        <button type="submit">Cadastrar Turma</button>
-      </form>
-      <h3>Turmas Cadastradas</h3>
-      <ul id="listaTurmas"></ul>
-    </section>
+    <div class="title-row">
+      <h2>Leituras da escola.</h2>
+      <a href="livros.html" class="link-explore">Explorar o acervo &rarr;</a>
+    </div>
+    
+    <p class="section-subtitle">Títulos selecionados para consulta, empréstimo e atividades de leitura em sala e na biblioteca.</p>
 
-    <!-- SESSÃO DE ALUNOS -->
-    <section class="card">
-      <h2>2. Gerenciar Alunos</h2>
-      <form id="formAluno">
-        <input type="text" id="nomeAluno" placeholder="Nome Completo" required>
-        <input type="text" id="matriculaAluno" placeholder="Matrícula/CGM" required>
-        <input type="number" id="idTurmaAluno" placeholder="ID da Turma" required>
-        <button type="submit">Cadastrar Aluno</button>
-      </form>
-      <h3>Alunos Cadastrados</h3>
-      <ul id="listaAlunos"></ul>
-    </section>
-
+    <!-- GRID DINÂMICO DE LIVROS -->
+    <div class="books-grid" id="gridRecomendados">
+      <!-- Cards serão carregados dinamicamente ou renderizados no layout -->
+    </div>
   </main>
+
+  <!-- BANNER INFORMATIVO AZUL -->
+  <section class="banner-blue">
+    <div class="banner-header">
+      <span class="tag-light">LEITURA NA ESCOLA</span>
+      <p>Organize os exemplares da biblioteca utilizando a tecnologia.</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <span class="step-num">01</span>
+        <h4>Cadastre-se na biblioteca</h4>
+        <p>Apresente o documento escolar e cadastre-se com a coordenação.</p>
+      </div>
+
+      <div class="step-card">
+        <span class="step-num">02</span>
+        <h4>Consulte o acervo</h4>
+        <p>Explore o catálogo e reserve os títulos para os alunos interessados.</p>
+      </div>
+
+      <div class="step-card">
+        <span class="step-num">03</span>
+        <h4>Observe o empréstimo</h4>
+        <p>Livros com devolução pendente devem ser notificados.</p>
+      </div>
+    </div>
+  </section>
 
   <script src="app.js"></script>
 </body>
