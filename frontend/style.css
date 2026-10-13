@@ -1,100 +1,152 @@
+/* Zerar margens e aplicar fonte padrão */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
+/* Fundo da tela inteira centralizado */
 body {
-  background-color: #f4f6f9;
-  color: #333;
-  padding: 20px;
-}
-
-header {
-  text-align: center;
-  margin-bottom: 30px;
-  background-color: #0056b3;
-  color: #fff;
-  padding: 15px;
-  border-radius: 8px;
-}
-
-.container {
+  background-color: #ffffff;
+  min-height: 100vh;
   display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
-.card {
-  background: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  width: 450px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+/* Container central de login */
+.login-box {
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+}
+
+/* Título BookCeep exato do Figma */
+.brand-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 3.4rem;
+  font-weight: 700;
+  color: #1e2b37;
+  margin-bottom: 20px;
+  letter-spacing: -1px;
 }
 
 h2 {
-  font-size: 1.2rem;
-  margin-bottom: 15px;
-  color: #0056b3;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 4px;
 }
 
-h3 {
-  font-size: 1rem;
-  margin: 15px 0 10px;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 5px;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
-  padding: 10px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-button:hover {
-  background-color: #218838;
-}
-
-ul {
-  list-style: none;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-li {
-  background: #f8f9fa;
-  margin-bottom: 5px;
-  padding: 8px 12px;
-  border-left: 4px solid #0056b3;
-  border-radius: 3px;
-  font-size: 0.9rem;
-}
-
-.btn-delete {
-  background-color: #dc3545;
-  padding: 4px 8px;
+.subtitle {
   font-size: 0.8rem;
+  color: #666666;
+  margin-bottom: 20px;
 }
 
-.btn-delete:hover {
-  background-color: #bd2130;
+/* Campo de e-mail com borda fina e arredondada */
+.field input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  outline: none;
+  margin-bottom: 12px;
+  color: #333333;
+}
+
+.field input:focus {
+  border-color: #1e2b37;
+}
+
+.field input::placeholder {
+  color: #999999;
+}
+
+/* Botão Azul Escuro Cadastre-se */
+.btn-email {
+  width: 100%;
+  padding: 11px;
+  background-color: #1e2b37;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-email:hover {
+  background-color: #15202a;
+}
+
+/* Linha divisória 'ou continue com' */
+.separator {
+  position: relative;
+  margin: 22px 0;
+  text-align: center;
+}
+
+.separator::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #e5e5e5;
+  z-index: 1;
+}
+
+.separator span {
+  position: relative;
+  z-index: 2;
+  background-color: #ffffff;
+  padding: 0 12px;
+  font-size: 0.72rem;
+  color: #888888;
+}
+
+/* Botão Cinza do Google */
+.btn-google {
+  width: 100%;
+  padding: 10px;
+  background-color: #ededed;
+  color: #222222;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background-color 0.2s;
+}
+
+.btn-google:hover {
+  background-color: #e2e2e2;
+}
+
+/* Texto de Termos no rodapé */
+.legal-text {
+  margin-top: 24px;
+  font-size: 0.72rem;
+  color: #888888;
+  line-height: 1.4;
+}
+
+.legal-text a {
+  color: #111111;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.legal-text a:hover {
+  text-decoration: underline;
 }
