@@ -608,3 +608,12 @@ h2 {
   font-size: 0.75rem;
   color: #666666;
 }
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-icon {
+  display: block;
+}
