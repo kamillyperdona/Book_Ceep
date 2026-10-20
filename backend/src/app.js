@@ -13,6 +13,7 @@ const alunoRoutes = require('./routes/aluno.routes'); // <-- ADICIONADO
 const livroRoutes = require('./routes/livro.routes');
 const emprestimoRoutes = require('./routes/emprestimo.routes');
 const relatorioRoutes = require('./routes/relatorio.routes');
+const authRoutes = require('./routes/auth.routes');
 
 // Mapeamento das rotas da API
 app.use('/api/turmas', turmaRoutes);
@@ -20,6 +21,7 @@ app.use('/api/alunos', alunoRoutes); // <-- ADICIONADO
 app.use('/api/livros', livroRoutes);
 app.use('/api/emprestimos', emprestimoRoutes);
 app.use('/api/relatorios', relatorioRoutes);
+app.use('/api/auth', authRoutes);
 
 // Middleware de tratamento de erros (deve ser o último)
 app.use((err, req, res, next) => {
