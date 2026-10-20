@@ -1,4 +1,4 @@
-document.getElementById('loginForm').addEventListener('submit', (e) => {
+document.getElementById('formLogin').addEventListener('submit', (e) => {
   e.preventDefault();
   
   const email = document.getElementById('email').value;
@@ -7,7 +7,7 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
     // Guarda o email da sessão localmente
     localStorage.setItem('usuario_email', email);
     
-    // Redireciona para a página principal / catálogo (index.html)
+    // Redireciona para a página principal (index.html)
     window.location.href = 'index.html';
   }
 });
