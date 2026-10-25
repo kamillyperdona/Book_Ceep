@@ -55,8 +55,11 @@
       Esqueceu a sua senha?
     </button>
 
+    <!-- Rodapé com links clicáveis -->
     <p class="legal-text">
-      Ao continuar, você concorda com os nossos <a href="#">Termos de Serviço</a> e <a href="#">Política de Privacidade</a>
+      Ao continuar, você concorda com os nossos 
+      <a href="#" id="linkTermos">Termos de Serviço</a> e 
+      <a href="#" id="linkPrivacidade">Política de Privacidade</a>.
     </p>
   </div>
 
@@ -72,6 +75,21 @@
           <button type="submit" class="btn-save">Enviar</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Modal de Termos de Serviço e Privacidade -->
+  <div id="modalTermos" class="modal-overlay">
+    <div class="modal-card" style="max-width: 550px; max-height: 85vh; overflow-y: auto;">
+      <h2 id="tituloModalTermos">Termos de Serviço</h2>
+      
+      <div id="conteudoModalTermos" style="text-align: left; font-size: 0.85rem; color: #444; line-height: 1.6; margin: 15px 0;">
+        <!-- O texto profissional será inserido via JS conforme o clique -->
+      </div>
+
+      <div class="modal-buttons">
+        <button type="button" id="btnFecharTermos" class="btn-save">Compreendido</button>
+      </div>
     </div>
   </div>
 
