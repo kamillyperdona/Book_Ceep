@@ -4,7 +4,7 @@ const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'kamilly.panzenhagen.perdona@gmail.com', // Substitua pelo e-mail institucional/pessoal que enviará a mensagem
+    user: 'kamilly.panzenhagen.perdona@gmail.com',
     pass: 'garpfpimotdriuis '
   }
 });
