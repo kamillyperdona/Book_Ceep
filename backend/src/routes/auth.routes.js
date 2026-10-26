@@ -55,7 +55,7 @@ router.post('/recuperar-senha', async (req, res) => {
     // 2. Define o conteúdo do e-mail
     const mailOptions = {
       from: '"BookCeep - Biblioteca CEEP" <kamilly.panzenhagen.perdona@gmail.com>',
-      to: email,
+      to: email,  
       subject: 'Recuperação de Senha - Sistema BookCeep',
       html: `
         <div style="font-family: 'Inter', Arial, sans-serif; padding: 20px; color: #333;">
