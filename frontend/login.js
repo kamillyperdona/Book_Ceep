@@ -23,7 +23,7 @@ document.getElementById('formLogin').addEventListener('submit', async (e) => {
   
   const email = document.getElementById('email').value.trim();
   const senha = document.getElementById('senha').value.trim();
-  const erroMsg = document.getElementById('mensagemErro');
+  const mensagemErro = document.getElementById('mensagemErro'); // ou elemento de mensagem
 
   try {
     const resposta = await fetch(`${API_URL}/auth/login`, {
@@ -34,16 +34,30 @@ document.getElementById('formLogin').addEventListener('submit', async (e) => {
 
     const resultado = await resposta.json();
 
-    if (resposta.ok && resultado.sucess) {
-      localStorage.setItem('usuario_logado', JSON.stringify(resultado.usuario));
-      window.location.href = 'index.html';
+    if (resposta.ok && resultado.success) {
+      // Guarda os dados do funcionário se precisar usar depois
+      localStorage.setItem('usuarioLogado', JSON.stringify(resultado.funcionario));
+      
+      // MENSAGEM DE SUCESSO VISUAL (opcional)
+      mensagemErro.style.color = '#2e7d32'; // Verde
+      mensagemErro.textContent = 'Login efetuado com sucesso! Redirecionando...';
+      mensagemErro.style.display = 'block';
+
+      // REDIRECIONAMENTO PARA O RESTO DO SISTEMA
+      setTimeout(() => {
+        window.location.href = 'index.html'; // Altere para a página principal do seu projeto (ex: index.html ou home.html)
+      }, 1000); // Espera 1 segundo para o utilizador ler a mensagem e entra
+
     } else {
-      erroMsg.style.display = 'block';
-      erroMsg.textContent = resultado.message || 'E-mail ou senha incorretos.';
+      mensagemErro.style.color = '#d32f2f'; // Vermelho
+      mensagemErro.textContent = resultado.message || 'E-mail ou senha incorretos.';
+      mensagemErro.style.display = 'block';
     }
   } catch (error) {
-    erroMsg.style.display = 'block';
-    erroMsg.textContent = 'Erro de conexão com o servidor. Verifique se o backend está ativo.';
+    console.error('Erro:', error);
+    mensagemErro.style.color = '#d32f2f';
+    mensagemErro.textContent = 'Erro de conexão com o servidor.';
+    mensagemErro.style.display = 'block';
   }
 });
 
