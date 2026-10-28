@@ -1,11 +1,10 @@
 const nodemailer = require('nodemailer');
 
-// Configuração do transportador de e-mail (Exemplo utilizando o Gmail)
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'kamilly.panzenhagen.perdona@gmail.com',
-    pass: 'garpfpimotdriuis '
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
   }
 });
 
