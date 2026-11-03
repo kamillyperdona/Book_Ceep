@@ -41,7 +41,6 @@ criar: async (req, res) => {
         [isbn, titulo, ano_lancamento, edicao || '1ª', idioma || 'Português']
       );
 
-      // 2. Insere a quantidade de exemplares informada, gerando um numero_tombo único para cada um
       const qtd = parseInt(quantidade_exemplares) || 1;
       for (let i = 0; i < qtd; i++) {
         // Gera um número de tombo único baseado no timestamp atual + o índice do loop
