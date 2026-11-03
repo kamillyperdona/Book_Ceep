@@ -57,6 +57,27 @@ criar: async (req, res) => {
       console.error('Erro ao cadastrar livro:', error);
       return res.status(500).json({ success: false, message: error.message || 'Erro ao cadastrar livro.' });
     }
+  },
+
+  deletar: async (req, res) => {
+    const { isbn } = req.params;
+
+    try {
+      // 1. Remove os exemplares vinculados primeiro
+      await db.query(`DELETE FROM biblioteca.exemplar WHERE ISBN = ?`, [isbn]);
+
+      // 2. Remove o livro principal
+      const [resultado] = await db.query(`DELETE FROM biblioteca.livro WHERE ISBN = ?`, [isbn]);
+
+      if (resultado.affectedRows === 0) {
+        return res.status(404).json({ success: false, message: 'Livro não encontrado.' });
+      }
+
+      return res.status(200).json({ success: true, message: 'Livro excluído com sucesso!' });
+    } catch (error) {
+      console.error('Erro ao excluir livro:', error);
+      return res.status(500).json({ success: false, message: 'Erro ao excluir livro.' });
+    }
   }
 };
 
