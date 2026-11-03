@@ -75,17 +75,36 @@ if (btnEsqueceu && modalRecuperar && btnCancelar) {
     modalRecuperar.classList.remove('active');
   });
 
-  document.getElementById('formRecuperar').addEventListener('submit', (e) => {
+  }
+  
+  // Captura o envio do formulário/modal de recuperação de senha
+  document.getElementById('formRecuperar')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const emailRec = document.getElementById('emailRecuperar').value.trim();
     
-    if (emailRec) {
-      alert(`Instruções de recuperação enviadas com sucesso para: ${emailRec}`);
-      modalRecuperar.classList.remove('active');
-      document.getElementById('emailRecuperar').value = '';
+    const emailInput = document.getElementById('emailRecuperar').value.trim();
+    
+    try {
+      const resposta = await fetch(`${API_URL}/auth/recuperar-senha`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailInput })
+      });
+
+      const resultado = await resposta.json();
+      
+      // Mostra a mensagem retornada pelo servidor
+      alert(resultado.message);
+
+      if (resposta.ok && resultado.success) {
+        // Fecha o modal e limpa o campo se funcionou
+        document.getElementById('modalRecuperar')?.classList.remove('active');
+        document.getElementById('emailRecuperar').value = '';
+      }
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+      alert('Erro de conexão com o servidor ao tentar recuperar a senha.');
     }
   });
-}
 
 // --- MODAL DE TERMOS DE SERVIÇO E POLÍTICA DE PRIVACIDADE ---
 const textoTermos = `
