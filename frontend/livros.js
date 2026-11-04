@@ -53,8 +53,12 @@ function renderizarPagina(pagina) {
   const fim = inicio + itensPorPagina;
   const livrosPagina = listaGlobalLivros.slice(inicio, fim);
 
-  // Cores de capa (alternadas)
-  const classesCapas = ['cover-terracotta', 'cover-beige', 'cover-navy', 'cover-sage', 'cover-mustard', 'cover-wine', 'cover-forest', 'cover-teal', 'cover-plum'];
+  // Paleta de cores estéticas estendida
+  const classesCapas = [
+    'cover-terracotta', 'cover-beige', 'cover-navy', 'cover-sage', 
+    'cover-mustard', 'cover-wine', 'cover-forest', 'cover-teal', 'cover-plum'
+  ];
+
   if (livrosPagina.length === 0) {
     grid.innerHTML = '<p style="grid-column: span 3; color: #666; text-align:center;">Nenhum livro encontrado.</p>';
     return;
@@ -68,8 +72,8 @@ function renderizarPagina(pagina) {
     const temDisponivel = disponiveis > 0;
 
     grid.innerHTML += `
-      <div class="book-card" style="position: relative;">
-        <button onclick="excluirLivro('${livro.ISBN}')" title="Excluir livro" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.5); color: #fff; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px;">&times;</button>
+      <div class="book-card">
+        <button class="btn-excluir-livro" onclick="excluirLivro('${livro.ISBN}')" title="Excluir livro">&times;</button>
         
         <div class="book-cover ${corCapa}">
           <h3>${livro.titulo}</h3>
@@ -84,6 +88,29 @@ function renderizarPagina(pagina) {
   });
 }
 
+// --- FUNÇÃO GLOBAL DE EXCLUSÃO DE LIVRO ---
+async function excluirLivro(isbn) {
+  if (!confirm('Deseja realmente excluir este livro e todos os seus exemplares do acervo?')) return;
+
+  try {
+    // Note o uso de ${API_URL} para garantir que vá para http://localhost:3000/api/livros/...
+    const res = await fetch(`${API_URL}/livros/${isbn}`, {
+      method: 'DELETE'
+    });
+    
+    const resultado = await res.json();
+
+    if (res.ok && resultado.success) {
+      carregarLivros(); // Recarrega o catálogo atualizado
+    } else {
+      alert(resultado.message || 'Erro ao excluir o livro.');
+    }
+  } catch (error) {
+    console.error('Erro na requisição de exclusão:', error);
+    alert('Erro de conexão com o servidor.');
+  }
+}
+
 // --- GERADOR DINÂMICO DE BOTÕES DE PAGINAÇÃO ---
 function renderizarPaginacao() {
   const container = document.getElementById('paginacaoContainer');
@@ -92,7 +119,7 @@ function renderizarPaginacao() {
   const totalPaginas = Math.ceil(listaGlobalLivros.length / itensPorPagina);
   container.innerHTML = '';
 
-  if (totalPaginas <= 1) return; // Se couber numa página, oculta a paginação
+  if (totalPaginas <= 1) return;
 
   for (let i = 1; i <= totalPaginas; i++) {
     const btn = document.createElement('button');
@@ -139,7 +166,6 @@ function setupModal() {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Coleta os dados do formulário
     const titulo = document.getElementById('tituloLivro').value;
     const isbn = document.getElementById('isbnLivro').value;
     const ano_lancamento = document.getElementById('anoLivro').value;
@@ -152,42 +178,18 @@ function setupModal() {
         body: JSON.stringify({ titulo, isbn, ano_lancamento, quantidade_exemplares })
       });
 
-      // IMPORTANTE: Tentar ler como JSON para capturar a resposta de sucesso/erro
       const resultado = await res.json();
 
-      // Verifica se a resposta HTTP é de sucesso (200 ou 201)
       if (res.ok && resultado.success) {
-        // Sucesso real: fecha o modal e recarrega a lista
         modal.classList.remove('active');
         form.reset();
-        carregarLivros(); // Recarrega os livros dinamicamente e atualiza a paginação!
+        carregarLivros();
       } else {
-        // Erro real vindo do back-end
         alert(resultado.message || 'Erro ao cadastrar o livro. Verifique os dados.');
       }
     } catch (error) {
-      // Erro de rede ou de processamento no front-end
       console.error(error);
       alert('Erro de conexão com o servidor.');
     }
   });
-  async function excluirLivro(isbn) {
-    if (!confirm('Deseja realmente excluir este livro e seus exemplares do acervo?')) return;
-
-    try {
-      const res = await fetch(`${API_URL}/livros/${isbn}`, {
-        method: 'DELETE'
-      });
-      const resultado = await res.json();
-
-      if (res.ok && resultado.success) {
-        carregarLivros(); // Recarrega o catálogo atualizado
-      } else {
-        alert(resultado.message || 'Erro ao excluir o livro.');
-      }
-    } catch (error) {
-      console.error(error);
-      alert('Erro de conexão com o servidor.');
-    }
-  }
 }
