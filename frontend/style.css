@@ -479,6 +479,7 @@ h2 {
   margin-top: 40px;
 }
 
+/* Estilo padrão dos botões de paginação (Inativos) */
 .btn-page {
   background: #ffffff;
   border: 1px solid #dcdcdc;
@@ -486,13 +487,19 @@ h2 {
   border-radius: 4px;
   font-size: 0.8rem;
   cursor: pointer;
-  color: #333;
+  color: #333333;
 }
 
+/* Estilo do botão da página atual com o tom de azul do sistema */
 .btn-page.active {
-  background: #1e2b37;
-  color: #fff;
-  border-color: #1e2b37;
+  background-color: #1e2b37 !important;
+  color: #ffffff !important;
+  border-color: #1e2b37 !important;
+}
+
+/* Efeito ao passar o mouse nas páginas inativas */
+.btn-page:hover:not(.active) {
+  background-color: #f0f0f0;
 }
 
 /* MODAL DE CADASTRO */
