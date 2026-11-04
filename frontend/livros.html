@@ -65,7 +65,7 @@
       </div>
 
       <!-- PAGINAÇÃO GERADA DINAMICAMENTE -->
-      <div class="pagination" id="paginacaoContainer"></div>
+      <div id="paginacao" class="pagination"></div>
     </section>
   </main>
 
@@ -81,6 +81,36 @@
         <div class="modal-buttons">
           <button type="button" class="btn-cancel" id="btnCloseModal">Cancelar</button>
           <button type="submit" class="btn-save">Salvar no Banco</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DE DETALHES E EDIÇÃO DO LIVRO -->
+  <div class="modal-overlay" id="modalDetalhesLivro">
+    <div class="modal-card">
+      <h2 id="detalheTituloModal">Detalhes do Livro</h2>
+      <form id="formEditarLivro">
+        <input type="hidden" id="editIsbn">
+        
+        <label style="font-size: 0.75rem; color: #666;">Título:</label>
+        <input type="text" id="editTitulo" required>
+        
+        <label style="font-size: 0.75rem; color: #666;">Ano de Publicação:</label>
+        <input type="number" id="editAno" required>
+        
+        <label style="font-size: 0.75rem; color: #666;">Idioma:</label>
+        <input type="text" id="editIdioma">
+
+        <label style="font-size: 0.75rem; color: #666;">Sinopse / Observações:</label>
+        <textarea id="editSinopse" rows="4" placeholder="Escreva a sinopse ou observações do livro..." style="width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 4px; font-family: 'Inter', sans-serif;"></textarea>
+        
+        <label style="font-size: 0.75rem; color: #666;">Adicionar novos exemplares ao estoque:</label>
+        <input type="number" id="editNovosExemplares" placeholder="Qtd de novos exemplares" min="0" value="0">
+        
+        <div class="modal-buttons">
+          <button type="button" class="btn-cancel" id="btnCloseDetalhes">Cancelar</button>
+          <button type="submit" class="btn-save">Salvar Alterações</button>
         </div>
       </form>
     </div>

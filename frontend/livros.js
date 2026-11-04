@@ -1,7 +1,7 @@
 const API_URL = 'http://localhost:3000/api';
 
 let paginaAtual = 1;
-const itensPorPagina = 20;
+const itensPorPagina = 12;
 let listaGlobalLivros = [];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -43,7 +43,7 @@ async function carregarLivros(termo = '') {
   }
 }
 
-// --- RENDERIZAR OS CARDS COM ESTOQUE REAL ---
+// --- RENDERIZAR OS CARDS COM CLIQUE PARA DETALHES ---
 function renderizarPagina(pagina) {
   paginaAtual = pagina;
   const grid = document.getElementById('gridLivrosCatalogo');
@@ -53,7 +53,6 @@ function renderizarPagina(pagina) {
   const fim = inicio + itensPorPagina;
   const livrosPagina = listaGlobalLivros.slice(inicio, fim);
 
-  // Paleta de cores estéticas estendida
   const classesCapas = [
     'cover-terracotta', 'cover-beige', 'cover-navy', 'cover-sage', 
     'cover-mustard', 'cover-wine', 'cover-forest', 'cover-teal', 'cover-plum'
@@ -71,9 +70,12 @@ function renderizarPagina(pagina) {
     const disponiveis = parseInt(livro.exemplares_disponiveis) || 0;
     const temDisponivel = disponiveis > 0;
 
+    // Convertemos o objeto do livro para string segura para passar no clique
+    const livroJson = encodeURIComponent(JSON.stringify(livro));
+
     grid.innerHTML += `
-      <div class="book-card">
-        <button class="btn-excluir-livro" onclick="excluirLivro('${livro.ISBN}')" title="Excluir livro">&times;</button>
+      <div class="book-card" style="cursor: pointer;" onclick="abrirDetalhesLivro(JSON.parse(decodeURIComponent('${livroJson}')))">
+        <button class="btn-excluir-livro" onclick="event.stopPropagation(); excluirLivro('${livro.ISBN}')" title="Excluir livro">&times;</button>
         
         <div class="book-cover ${corCapa}">
           <h3>${livro.titulo}</h3>
@@ -88,12 +90,73 @@ function renderizarPagina(pagina) {
   });
 }
 
+// --- ABRIR MODAL DE DETALHES/EDIÇÃO ---
+function abrirDetalhesLivro(livro) {
+  const modal = document.getElementById('modalDetalhesLivro');
+  if (!modal) return;
+
+  document.getElementById('editIsbn').value = livro.ISBN;
+  document.getElementById('editTitulo').value = livro.titulo || '';
+  document.getElementById('editAno').value = livro.ano_lancamento || '';
+  document.getElementById('editIdioma').value = livro.idioma || '';
+  
+  // GARANTA QUE ESTA LINHA ESTÁ EXATAMENTE ASSIM:
+  document.getElementById('editSinopse').value = livro.sinopse || '';
+  
+  document.getElementById('editNovosExemplares').value = 0;
+
+  modal.classList.add('active');
+}
+
+// Fechar modal de detalhes
+document.addEventListener('DOMContentLoaded', () => {
+  const modalDetalhes = document.getElementById('modalDetalhesLivro');
+  const btnCloseDetalhes = document.getElementById('btnCloseDetalhes');
+  const formEditar = document.getElementById('formEditarLivro');
+
+  if (btnCloseDetalhes) {
+    btnCloseDetalhes.addEventListener('click', () => modalDetalhes.classList.remove('active'));
+  }
+
+  if (formEditar) {
+    formEditar.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const isbn = document.getElementById('editIsbn').value;
+      const titulo = document.getElementById('editTitulo').value;
+      const ano_lancamento = document.getElementById('editAno').value;
+      const idioma = document.getElementById('editIdioma').value;
+      const sinopse = document.getElementById('editSinopse').value;
+      const novos_exemplares = document.getElementById('editNovosExemplares').value;
+
+      try {
+        const res = await fetch(`${API_URL}/livros/${isbn}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ titulo, ano_lancamento, idioma, sinopse, novos_exemplares })
+        });
+
+        const resultado = await res.json();
+
+        if (res.ok && resultado.success) {
+          modalDetalhes.classList.remove('active');
+          carregarLivros(); // Atualiza a listagem na tela
+        } else {
+          alert(resultado.message || 'Erro ao atualizar o livro.');
+        }
+      } catch (error) {
+        console.error('Erro ao atualizar:', error);
+        alert('Erro de conexão com o servidor.');
+      }
+    });
+  }
+});
+
 // --- FUNÇÃO GLOBAL DE EXCLUSÃO DE LIVRO ---
 async function excluirLivro(isbn) {
   if (!confirm('Deseja realmente excluir este livro e todos os seus exemplares do acervo?')) return;
 
   try {
-    // Note o uso de ${API_URL} para garantir que vá para http://localhost:3000/api/livros/...
     const res = await fetch(`${API_URL}/livros/${isbn}`, {
       method: 'DELETE'
     });
@@ -101,7 +164,7 @@ async function excluirLivro(isbn) {
     const resultado = await res.json();
 
     if (res.ok && resultado.success) {
-      carregarLivros(); // Recarrega o catálogo atualizado
+      carregarLivros(); // Recarrega o catálogo atualizado na tela
     } else {
       alert(resultado.message || 'Erro ao excluir o livro.');
     }
@@ -112,26 +175,28 @@ async function excluirLivro(isbn) {
 }
 
 // --- GERADOR DINÂMICO DE BOTÕES DE PAGINAÇÃO ---
-function renderizarPaginacao() {
-  const container = document.getElementById('paginacaoContainer');
-  if (!container) return;
+  function renderizarPaginacao() {
+    const containerPaginacao = document.getElementById('paginacao'); // substitua pelo ID do container de paginação no seu HTML
+    if (!containerPaginacao) return;
+    
+    containerPaginacao.innerHTML = '';
+    const totalPaginas = Math.ceil(listaGlobalLivros.length / itensPorPagina);
 
-  const totalPaginas = Math.ceil(listaGlobalLivros.length / itensPorPagina);
-  container.innerHTML = '';
-
-  if (totalPaginas <= 1) return;
-
-  for (let i = 1; i <= totalPaginas; i++) {
-    const btn = document.createElement('button');
-    btn.className = `btn-page ${i === paginaAtual ? 'active' : ''}`;
-    btn.textContent = i;
-    btn.addEventListener('click', () => {
-      renderizarPagina(i);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-    container.appendChild(btn);
+    for (let i = 1; i <= totalPaginas; i++) {
+      const btn = document.createElement('button');
+      
+      // AQUI ESTÁ O SEGREDO: Adiciona a classe 'active' apenas se for a página atual
+      btn.className = `btn-page ${i === paginaAtual ? 'active' : ''}`;
+      
+      btn.innerText = i;
+      btn.onclick = () => {
+        renderizarPagina(i);
+        renderizarPaginacao(); // Reenha os botões para atualizar qual está ativo
+      };
+      
+      containerPaginacao.appendChild(btn);
+    }
   }
-}
 
 // --- CONFIGURAR BOTÃO DE CONSULTAR/BUSCA POR TÍTULO ---
 function setupBusca() {
