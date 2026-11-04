@@ -8,4 +8,7 @@ router.get('/', LivroController.listar);
 // Rota para cadastrar um novo livro e seus exemplares
 router.post('/', LivroController.criar);
 
+// CORREÇÃO: Altere de '/livros/:isbn' para apenas '/:isbn'
+router.delete('/:isbn', LivroController.deletar);
+
 module.exports = router;
