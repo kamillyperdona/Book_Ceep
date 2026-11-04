@@ -6,12 +6,12 @@ const LivroController = {
 
     try {
       let query = `
-        SELECT l.ISBN, l.titulo, l.ano_lancamento, l.edicao, l.idioma, 
-               COUNT(ex.id_exemplar) AS total_exemplares,
-               SUM(CASE WHEN ex.status = 'Disponível' THEN 1 ELSE 0 END) AS exemplares_disponiveis
-        FROM biblioteca.livro l
-        LEFT JOIN biblioteca.exemplar ex ON l.ISBN = ex.ISBN
-      `;
+  SELECT l.ISBN, l.titulo, l.ano_lancamento, l.edicao, l.idioma, l.sinopse, 
+         COUNT(ex.id_exemplar) AS total_exemplares,
+         SUM(CASE WHEN ex.status = 'Disponível' THEN 1 ELSE 0 END) AS exemplares_disponiveis
+  FROM biblioteca.livro l
+  LEFT JOIN biblioteca.exemplar ex ON l.ISBN = ex.ISBN
+`;
       
       let params = [];
       if (pesquisa) {
@@ -20,7 +20,7 @@ const LivroController = {
       }
 
       // Agrupa e ordena os livros alfabeticamente por título
-      query += ` GROUP BY l.ISBN, l.titulo, l.ano_lancamento, l.edicao, l.idioma ORDER BY l.titulo ASC`;
+      query += ` GROUP BY l.ISBN, l.titulo, l.ano_lancamento, l.edicao, l.idioma, l.sinopse ORDER BY l.titulo ASC`;
 
       const [livros] = await db.query(query, params);
       return res.json({ success: true, livros });
@@ -77,6 +77,35 @@ criar: async (req, res) => {
     } catch (error) {
       console.error('Erro ao excluir livro:', error);
       return res.status(500).json({ success: false, message: 'Erro ao excluir livro.' });
+    }
+  },
+
+  atualizar: async (req, res) => {
+    const { isbn } = req.params;
+    const { titulo, ano_lancamento, edicao, idioma, sinopse, novos_exemplares } = req.body;
+
+    try {
+      // Atualiza os dados principais incluindo a sinopse
+      await db.query(
+        `UPDATE biblioteca.livro SET titulo = ?, ano_lancamento = ?, edicao = ?, idioma = ?, sinopse = ? WHERE ISBN = ?`,
+        [titulo, ano_lancamento, edicao || '1ª', idioma || 'Português', sinopse, isbn]
+      );
+
+      const qtdAdicionar = parseInt(novos_exemplares) || 0;
+      if (qtdAdicionar > 0) {
+        for (let i = 0; i < qtdAdicionar; i++) {
+          const numeroTombo = Date.now() + i;
+          await db.query(
+            `INSERT INTO biblioteca.exemplar (ISBN, numero_tombo, status) VALUES (?, ?, 'Disponível')`,
+            [isbn, numeroTombo]
+          );
+        }
+      }
+
+      return res.status(200).json({ success: true, message: 'Livro atualizado com sucesso!' });
+    } catch (error) {
+      console.error('Erro ao atualizar livro:', error);
+      return res.status(500).json({ success: false, message: 'Erro ao atualizar livro.' });
     }
   }
 };
