@@ -63,7 +63,7 @@ criar: async (req, res) => {
     const { isbn } = req.params;
 
     try {
-      // 1. Remove os exemplares vinculados primeiro
+      // 1. Remove os exemplares vinculados primeiro (evita erro de FK)
       await db.query(`DELETE FROM biblioteca.exemplar WHERE ISBN = ?`, [isbn]);
 
       // 2. Remove o livro principal
