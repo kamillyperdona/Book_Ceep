@@ -31,11 +31,21 @@ const LivroController = {
     }
   },
 
-criar: async (req, res) => {
+  criar: async (req, res) => {
     const { titulo, isbn, ano_lancamento, edicao, idioma, quantidade_exemplares } = req.body;
 
     try {
-      // 1. Insere o livro principal
+      // 1. Validação do ISBN (exatamente 13 dígitos numéricos)
+      const regexISBN = /^\d{13}$/;
+
+      if (!regexISBN.test(isbn)) {
+        return res.status(400).json({ 
+          success: false,
+          message: "ISBN inválido! Digite exatamente 13 números, sem traços ou letras." 
+        });
+      }
+
+      // 2. Insere o livro principal
       await db.query(
         `INSERT INTO biblioteca.livro (ISBN, id_editora, id_genero, titulo, ano_lancamento, edicao, idioma) VALUES (?, 1, 1, ?, ?, ?, ?)`,
         [isbn, titulo, ano_lancamento, edicao || '1ª', idioma || 'Português']
