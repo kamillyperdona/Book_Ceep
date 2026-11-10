@@ -115,7 +115,7 @@ const LivroController = {
       return res.status(200).json({ success: true, message: 'Livro atualizado com sucesso!' });
     } catch (error) {
       console.error('Erro ao atualizar livro:', error);
-      return res.status(500).json({ success: false, message: 'Erro ao atualizar livro!' });
+      return res.status(500).json({ success: false, message: 'Erro ao atualizar livro.' });
     }
   }
 };
