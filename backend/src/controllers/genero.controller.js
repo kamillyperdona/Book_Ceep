@@ -12,7 +12,7 @@ class GeneroController {
   async criar(req, res) {
     try {
       const id = await generoService.criar(req.body);
-      return res.status(201).json({ message: 'Gênero cadastrado com sucesso!', id });
+      return res.status(201).json({ message: 'Gênero cadastrado com sucesso!!', id });
     } catch (error) {
       return res.status(400).json({ error: error.message });
     }
