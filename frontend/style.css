@@ -534,12 +534,14 @@ h2 {
   color: #111;
 }
 
-.modal-card form input {
+.modal-card form input,
+.modal-card form select {
   width: 100%;
   padding: 10px;
   margin-bottom: 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box; /* Essencial para respeitar o padding e a largura máxima */
 }
 
 .modal-buttons {
@@ -660,4 +662,16 @@ h2 {
 
 .btn-excluir-livro:hover {
   background: rgba(211, 47, 47, 0.9); /* Fica vermelho forte ao passar o mouse */
+}
+
+#gridAlunos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.book-card {
+  display: flex;
+  flex-direction: column;
 }

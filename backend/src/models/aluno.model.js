@@ -2,52 +2,47 @@ const db = require('../config/db');
 
 class AlunoModel {
   static async getAll() {
-    // Removida a coluna t.serie que não existe na tabela turmas
     const [rows] = await db.query(`
-      SELECT 
-        a.id,
-        a.matricula,
-        a.nome,
-        a.id_turma,
-        t.nome AS nome_turma
-      FROM alunos a
-      LEFT JOIN turmas t ON a.id_turma = t.id
+      SELECT a.*, t.turma, t.nome_turma, t.serie 
+      FROM alunos a 
+      LEFT JOIN biblioteca.turma t ON a.id_turma = t.id_turma
     `);
     return rows;
   }
 
-  static async getByCgm(cgm) {
-    const [rows] = await db.query('SELECT * FROM alunos WHERE matricula = ?', [cgm]);
+  static async getByCgm(matricula) {
+    const [rows] = await db.query(
+      'SELECT * FROM alunos WHERE matricula = ?', 
+      [matricula]
+    );
     return rows[0];
   }
 
   static async create(data) {
-    const { matricula, CGM, nome, nome_aluno, turma_id, id_turma } = data;
-    const mat = matricula || CGM;
-    const nomeAluno = nome || nome_aluno;
-    const turmaId = id_turma || turma_id;
-
+    const { nome, cgm, matricula, id_turma } = data;
+    const valorMatricula = matricula || cgm;
     const [result] = await db.query(
-      'INSERT INTO alunos (matricula, nome, id_turma) VALUES (?, ?, ?)',
-      [mat, nomeAluno, turmaId || null]
-    );
-    return { id: result.insertId, matricula: mat, nome: nomeAluno, id_turma: turmaId };
-  }
-
-  static async update(cgm, data) {
-    const { nome, nome_aluno, turma_id, id_turma } = data;
-    const nomeAluno = nome || nome_aluno;
-    const turmaId = id_turma || turma_id;
-
-    const [result] = await db.query(
-      'UPDATE alunos SET nome = ?, id_turma = ? WHERE matricula = ?',
-      [nomeAluno, turmaId, cgm]
+      'INSERT INTO alunos (nome, matricula, id_turma) VALUES (?, ?, ?)', 
+      [nome, valorMatricula, id_turma]
     );
     return result;
   }
 
-  static async delete(cgm) {
-    const [result] = await db.query('DELETE FROM alunos WHERE matricula = ?', [cgm]);
+  static async update(matriculaOriginal, data) {
+    const { nome, cgm, matricula, id_turma } = data;
+    const valorMatricula = matricula || cgm || matriculaOriginal;
+    const [result] = await db.query(
+      'UPDATE alunos SET nome = ?, matricula = ?, id_turma = ? WHERE matricula = ?', 
+      [nome, valorMatricula, id_turma, matriculaOriginal]
+    );
+    return result;
+  }
+
+  static async delete(matricula) {
+    const [result] = await db.query(
+      'DELETE FROM alunos WHERE matricula = ?', 
+      [matricula]
+    );
     return result;
   }
 }

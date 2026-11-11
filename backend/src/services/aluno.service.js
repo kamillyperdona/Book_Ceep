@@ -14,18 +14,16 @@ class AlunoService {
   }
 
   async criarAluno(data) {
-    // Aqui você pode validar se o CGM já existe ou campos obrigatórios
     return await AlunoModel.create(data);
   }
 
   async atualizarAluno(cgm, data) {
-    await this.buscarAlunoPorCgm(cgm); // Garante que existe
     return await AlunoModel.update(cgm, data);
   }
 
   async deletarAluno(cgm) {
-    await this.buscarAlunoPorCgm(cgm);
-    return await AlunoModel.delete(cgm);
+    const resultado = await AlunoModel.delete(cgm);
+    return resultado;
   }
 }
 

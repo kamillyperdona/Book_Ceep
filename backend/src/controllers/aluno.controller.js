@@ -20,30 +20,31 @@ class AlunoController {
     }
   }
 
+  // aluno.controller.js
   async criar(req, res) {
     try {
-      const { cgm } = req.body;
+      const { cgm, matricula } = req.body;
+      const valorCGM = cgm || matricula;
 
-      // ---> COLIQUE A VALIDAÇÃO EXATAMENTE AQUI <---
-      const regexCGM = /^\d{7,12}$/;
+      // Validação estrita: exatamente 10 números
+      const regexCGM = /^\d{10}$/;
 
-      if (!regexCGM.test(cgm)) {
+      if (!regexCGM.test(valorCGM)) {
         return res.status(400).json({ 
-          error: 'CGM/Matrícula inválido! Digite apenas números (entre 7 e 12 dígitos).' 
+          error: 'O CGM/Matrícula deve conter exatamente 10 dígitos numéricos.' 
         });
       }
-      // ----------------------------------------------
 
       await alunoService.criarAluno(req.body);
       return res.status(201).json({ message: 'Aluno cadastrado com sucesso!' });
     } catch (error) {
       return res.status(400).json({ error: error.message });
     }
-  }
+}
 
-  async atualizar(req, res) {
+  async atualizar(req, res, next) {
     try {
-      const { cgm } = req.params;
+      const { cgm } = req.params; // ou id
       await alunoService.atualizarAluno(cgm, req.body);
       return res.status(200).json({ message: 'Aluno atualizado com sucesso!' });
     } catch (error) {
@@ -51,13 +52,16 @@ class AlunoController {
     }
   }
 
-  async deletar(req, res) {
+  // No seu aluno.controller.js
+  async deletar(req, res, next) {
     try {
-      const { cgm } = req.params;
+      const { cgm } = req.params; 
       await alunoService.deletarAluno(cgm);
+      // Retorna uma resposta JSON limpa indicando o sucesso
       return res.status(200).json({ message: 'Aluno removido com sucesso!' });
     } catch (error) {
-      return res.status(404).json({ error: error.message });
+      // Se realmente houver erro, retorna a mensagem
+      return res.status(400).json({ error: error.message });
     }
   }
 }

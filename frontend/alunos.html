@@ -8,6 +8,21 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Cores exclusivas para cada curso do CEEP */
+    .cover-ads { background-color: #2b5c8f !important; }         /* Análise e Dev. de Sistemas */
+    .cover-biotec { background-color: #2e7d32 !important; }      /* Biotecnologia */
+    .cover-edif { background-color: #b7410e !important; }        /* Edificações */
+    .cover-eletromec { background-color: #006064 !important; }   /* Eletromecânica */
+    .cover-eletronica { background-color: #d84315 !important; }  /* Eletrônica */
+    .cover-farmacia { background-color: #00897b !important; }    /* Farmácia */
+    .cover-automotiva { background-color: #37474f !important; }  /* Manutenção Automotiva */
+    .cover-mecanica { background-color: #c62828 !important; }    /* Mecânica */
+    .cover-ambiente { background-color: #558b2f !important; }    /* Meio Ambiente */
+    .cover-jogos { background-color: #6a1b9a !important; }       /* Programação de Jogos Digitais */
+    .cover-quimica { background-color: #f57f17 !important; }     /* Química */
+    .cover-default { background-color: #4a3b5c !important; }     /* Padrão */
+  </style>
 </head>
 <body class="bg-home">
 
@@ -29,46 +44,86 @@
       <a href="alunos.html" class="active">Aluno</a>
     </nav>
 
+    <!-- BADGE DO USUÁRIO PADRONIZADO IGUAL AOS LIVROS -->
     <div class="user-badge">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
         <circle cx="12" cy="7" r="4"></circle>
       </svg>
-      <span id="nomeFuncionario">Nome do funcionário</span>
+      <span id="nomeFuncionario">Administrador CEEP</span>
     </div>
   </header>
 
   <main class="main-content-wide">
-    <div class="title-row" style="margin-bottom: 25px;">
-      <div>
-        <h1 class="page-title" style="margin-bottom: 4px;">Aluno</h1>
-        <p class="section-subtitle" style="margin: 0;">Alunos selecionados para consulta.</p>
-      </div>
-      <button class="btn-cadastrar-livro" id="btnOpenModalAluno">+ Cadastrar novo Aluno</button>
+    <div style="margin-bottom: 25px;">
+      <h1 class="page-title" style="margin-bottom: 4px;">Aluno</h1>
+      <p class="section-subtitle" style="margin: 0;">Alunos selecionados para consulta.</p>
     </div>
 
+      <!-- BARRA DE PESQUISA PADRONIZADA IGUAL AOS LIVROS -->
+    <!-- Substitua a linha do input atual por esta estrutura: -->
+    <div class="search-bar-row">
+      <div class="search-input-wrapper">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="inputBuscaAluno" placeholder="Busque aluno por nome ou CGM...">
+      </div>
+      <button id="btnConsultarAluno" class="btn-consultar">Consultar</button>
+    </div>
+
+    <button class="btn-cadastrar-livro" id="btnOpenModalAluno" style="margin-bottom: 25px;">+ Cadastrar novo Aluno</button>
+
     <!-- GRID DE ALUNOS -->
-    <div class="books-grid" id="gridAlunos" style="margin-top: 20px;">
-      <!-- Cards dos alunos buscados do MySQL serão inseridos aqui -->
+    <div class="books-grid" id="gridAlunos">
+      <!-- Cards serão injetados dinamicamente via JS -->
     </div>
   </main>
 
-  <!-- MODAL DE CADASTRO DE ALUNO -->
+  <!-- MODAL DE CADASTRO -->
   <div class="modal-overlay" id="modalAluno">
     <div class="modal-card">
       <h2>Cadastrar Novo Aluno</h2>
       <form id="formCadastrarAluno">
-        <input type="text" id="nomeAluno" placeholder="Nome Completo do Aluno" required>
-        <input type="text" id="matriculaAluno" placeholder="Matrícula / CGM (Ex: 2026001)" required>
-          <div class="mb-3" style="margin-bottom: 15px;">
-            <label for="selectTurma" style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px; color: #333;">Turma</label>
-            <select id="selectTurma" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: 'Inter', sans-serif;">
-              <option value="" selected disabled>Selecione a turma...</option>
-            </select>
-          </div>
+        <label class="form-group-label">Nome Completo</label>
+        <input type="text" id="nomeAluno" placeholder="Digite o nome completo" required>
+
+        <label class="form-group-label">Matrícula / CGM (10 dígitos)</label>
+        <input type="text" id="matriculaAluno" placeholder="Ex: 1234567890" maxlength="10" pattern="\d{10}" title="Digite exatamente 10 números" required>
+        
+        <label class="form-group-label">Turma</label>
+        <select id="selectTurma" required>
+          <option value="" selected disabled>Selecione a turma...</option>
+        </select>
+
         <div class="modal-buttons">
           <button type="button" class="btn-cancel" id="btnCloseModalAluno">Cancelar</button>
           <button type="submit" class="btn-save">Cadastrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DE EDIÇÃO / DETALHES -->
+  <div class="modal-overlay" id="modalEditarAluno">
+    <div class="modal-card">
+      <h2>Editar / Detalhes do Aluno</h2>
+      <form id="formEditarAluno">
+        <input type="hidden" id="editIdAluno">
+        
+        <label class="form-group-label">Nome Completo</label>
+        <input type="text" id="editNomeAluno" required>
+
+        <label class="form-group-label">Matrícula / CGM (10 dígitos)</label>
+        <input type="text" id="editMatriculaAluno" maxlength="10" pattern="\d{10}" required>
+
+        <label class="form-group-label">Turma</label>
+        <select id="editSelectTurma" required></select>
+
+        <div class="modal-buttons" style="justify-content: space-between; margin-top: 10px;">
+          <button type="button" class="btn-cancel" style="background-color: #d32f2f; color: white;" id="btnDeletarAluno">Excluir Aluno</button>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-cancel" id="btnCloseModalEditar">Cancelar</button>
+            <button type="submit" class="btn-save">Salvar Alterações</button>
+          </div>
         </div>
       </form>
     </div>
