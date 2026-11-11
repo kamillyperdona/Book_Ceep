@@ -34,7 +34,7 @@
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
         <circle cx="12" cy="7" r="4"></circle>
       </svg>
-      <span>Nome do funcionário</span>
+      <span>Administrador CEEP</span>
     </div>
   </header>
 
@@ -42,17 +42,18 @@
     <h1 class="page-title">Empréstimos</h1>
     <p class="section-subtitle" style="margin-top: -15px; margin-bottom: 25px;">Alunos selecionados para consulta.</p>
 
-    <!-- BARRA DE BUSCA E AÇÕES -->
+    <!-- BARRA DE PESQUISA E AÇÃO NO MESMO PADRÃO -->
     <div class="search-bar-row">
       <div class="search-input-wrapper">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <input type="text" id="inputBuscaEmprestimo" placeholder="Busque por alunos...">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="inputBuscaEmprestimo" placeholder="Busque por alunos ou empréstimos...">
       </div>
-      <button class="btn-consultar" id="btnConsultarEmprestimo">Consultar</button>
-      <button class="btn-cadastrar-livro" id="btnOpenModalEmprestimo">+ Novo Empréstimo</button>
+      <button id="btnConsultarEmprestimo" class="btn-consultar">Consultar</button>
+    </div>
+
+    <!-- BOTÃO DE CADASTRO LOGO ABAIXO DA BUSCA -->
+    <div class="actions-bar">
+      <button id="btnOpenModal" class="btn-cadastrar-livro">+ Novo Empréstimo</button>
     </div>
 
     <!-- GRID DE EMPRÉSTIMOS -->
@@ -62,16 +63,39 @@
   </main>
 
   <!-- MODAL DE REGISTRO DE EMPRÉSTIMO -->
-  <div class="modal-overlay" id="modalEmprestimo">
-    <div class="modal-card">
-      <h2>Registrar Empréstimo</h2>
+  <div id="modalEmprestimo" class="modal-overlay">
+    <div class="modal-card" style="max-width: 450px;">
+      <h2>Novo Empréstimo</h2>
       <form id="formCadastrarEmprestimo">
-        <input type="number" id="idAluno" placeholder="ID do Aluno" required>
-        <input type="number" id="idExemplar" placeholder="ID do Livro / Exemplar" required>
-        <input type="number" id="idFuncionario" placeholder="ID do Funcionário" value="1" required>
+        
+        <div style="margin-bottom: 12px;">
+          <label style="font-size: 0.8rem; font-weight: 600; color: #333; display: block; margin-bottom: 4px;">Aluno (Cadastrado):</label>
+          <select id="selectAluno" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem;" required>
+            <option value="">Selecione o aluno...</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom: 12px;">
+          <label style="font-size: 0.8rem; font-weight: 600; color: #333; display: block; margin-bottom: 4px;">Livro / Exemplar Disponível:</label>
+          <select id="selectLivro" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem;" required>
+            <option value="">Selecione o livro...</option>
+          </select>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+          <div style="flex: 1;">
+            <label style="font-size: 0.75rem; color: #666; display: block; margin-bottom: 4px;">Data Emissão:</label>
+            <input type="text" id="dataEmissao" disabled style="background-color: #f0f0f0; width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          </div>
+          <div style="flex: 1;">
+            <label style="font-size: 0.75rem; color: #666; display: block; margin-bottom: 4px;">Devolução (2 meses):</label>
+            <input type="text" id="dataDevolucao" disabled style="background-color: #f0f0f0; width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          </div>
+        </div>
+
         <div class="modal-buttons">
-          <button type="button" class="btn-cancel" id="btnCloseModalEmprestimo">Cancelar</button>
-          <button type="submit" class="btn-save">Registrar</button>
+          <button type="button" id="btnCloseModalEmprestimo" class="btn-cancel">Cancelar</button>
+          <button type="submit" class="btn-save">Salvar</button>
         </div>
       </form>
     </div>
