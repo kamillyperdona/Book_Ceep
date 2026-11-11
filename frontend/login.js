@@ -45,7 +45,7 @@ document.getElementById('formLogin').addEventListener('submit', async (e) => {
 
       // REDIRECIONAMENTO PARA O RESTO DO SISTEMA
       setTimeout(() => {
-        window.location.href = 'index.html'; // Altere para a página principal do seu projeto (ex: index.html ou home.html)
+        window.location.href = 'emprestimos.html';
       }, 1000); // Espera 1 segundo para o utilizador ler a mensagem e entra
 
     } else {
