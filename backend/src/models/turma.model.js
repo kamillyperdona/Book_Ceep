@@ -2,25 +2,33 @@ const db = require('../config/db');
 
 class TurmaModel {
   static async getAll() {
-    const [rows] = await db.query('SELECT * FROM turmas');
+    // Aponta para a tabela correta da base de dados
+    const [rows] = await db.query('SELECT * FROM biblioteca.turma');
     return rows;
   }
 
   static async create(data) {
-    const { nome } = data;
-    const [result] = await db.query('INSERT INTO turmas (nome) VALUES (?)', [nome]);
-    return { id: result.insertId, nome };
+    const { ano_letivo, turma, nome_turma, serie } = data;
+    const [result] = await db.query(
+      'INSERT INTO biblioteca.turma (ano_letivo, turma, nome_turma, serie) VALUES (?, ?, ?, ?)', 
+      [ano_letivo, turma, nome_turma, serie]
+    );
+    return { id_turma: result.insertId, ano_letivo, turma, nome_turma, serie };
   }
 
   static async update(id, data) {
-    const { nome } = data;
-    const [result] = await db.query('UPDATE turmas SET nome = ? WHERE id = ?', [nome, id]);
+    const { ano_letivo, turma, nome_turma, serie } = data;
+    const [result] = await db.query(
+      'UPDATE biblioteca.turma SET ano_letivo = ?, turma = ?, nome_turma = ?, serie = ? WHERE id_turma = ?', 
+      [ano_letivo, turma, nome_turma, serie, id]
+    );
     return result;
   }
   
   static async delete(id) {
-  const [result] = await db.query('DELETE FROM turmas WHERE id = ?', [id]);
-  return result;
+    // Usa id_turma que é a chave primária real da tabela
+    const [result] = await db.query('DELETE FROM biblioteca.turma WHERE id_turma = ?', [id]);
+    return result;
   }
 }
 

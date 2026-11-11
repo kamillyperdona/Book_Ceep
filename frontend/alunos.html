@@ -34,7 +34,7 @@
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
         <circle cx="12" cy="7" r="4"></circle>
       </svg>
-      <span>Nome do funcionário</span>
+      <span id="nomeFuncionario">Nome do funcionário</span>
     </div>
   </header>
 
@@ -60,7 +60,12 @@
       <form id="formCadastrarAluno">
         <input type="text" id="nomeAluno" placeholder="Nome Completo do Aluno" required>
         <input type="text" id="matriculaAluno" placeholder="Matrícula / CGM (Ex: 2026001)" required>
-        <input type="number" id="idTurmaAluno" placeholder="ID da Turma (Ex: 1)" required>
+          <div class="mb-3" style="margin-bottom: 15px;">
+            <label for="selectTurma" style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px; color: #333;">Turma</label>
+            <select id="selectTurma" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: 'Inter', sans-serif;">
+              <option value="" selected disabled>Selecione a turma...</option>
+            </select>
+          </div>
         <div class="modal-buttons">
           <button type="button" class="btn-cancel" id="btnCloseModalAluno">Cancelar</button>
           <button type="submit" class="btn-save">Cadastrar</button>

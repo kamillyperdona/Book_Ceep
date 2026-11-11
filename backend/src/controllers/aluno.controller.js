@@ -22,6 +22,18 @@ class AlunoController {
 
   async criar(req, res) {
     try {
+      const { cgm } = req.body;
+
+      // ---> COLIQUE A VALIDAÇÃO EXATAMENTE AQUI <---
+      const regexCGM = /^\d{7,12}$/;
+
+      if (!regexCGM.test(cgm)) {
+        return res.status(400).json({ 
+          error: 'CGM/Matrícula inválido! Digite apenas números (entre 7 e 12 dígitos).' 
+        });
+      }
+      // ----------------------------------------------
+
       await alunoService.criarAluno(req.body);
       return res.status(201).json({ message: 'Aluno cadastrado com sucesso!' });
     } catch (error) {
