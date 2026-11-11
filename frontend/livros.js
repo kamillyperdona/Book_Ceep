@@ -66,9 +66,18 @@ function renderizarPagina(pagina) {
   livrosPagina.forEach((livro, index) => {
     const corCapa = classesCapas[index % classesCapas.length];
     
-    const total = parseInt(livro.total_exemplares) || 0;
-    const disponiveis = parseInt(livro.exemplares_disponiveis) || 0;
-    const temDisponivel = disponiveis > 0;
+    // Lógica para montar a etiqueta de disponibilidade
+    const total = parseInt(livro.quantidade || livro.total_exemplares) || 0;
+    const disponiveis = livro.exemplares_disponiveis !== undefined ? parseInt(livro.exemplares_disponiveis) : total;
+    
+    let tagStatus = '';
+    if (disponiveis > 0) {
+      // Verde se tiver estoque
+      tagStatus = `<p style="color: #16a34a; font-size: 0.8rem; font-weight: 600; margin: 0;">• Disponível (${disponiveis}/${total})</p>`;
+    } else {
+      // Vermelho se todos estiverem emprestados
+      tagStatus = `<p style="color: #ef4444; font-size: 0.8rem; font-weight: 600; margin: 0;">• Esgotado (0/${total})</p>`;
+    }
 
     // Convertemos o objeto do livro para string segura para passar no clique
     const livroJson = encodeURIComponent(JSON.stringify(livro));
@@ -80,10 +89,13 @@ function renderizarPagina(pagina) {
         <div class="book-cover ${corCapa}">
           <h3>${livro.titulo}</h3>
         </div>
-        <div class="book-status" style="color: ${temDisponivel ? '#2e7d32' : '#d32f2f'}">
-          ● ${temDisponivel ? `Disponível (${disponiveis}/${total})` : `Indisponível (0/${total})`}
+        
+        <!-- Etiqueta atualizada de disponibilidade -->
+        <div class="book-status" style="margin-top: 8px;">
+          ${tagStatus}
         </div>
-        <div class="book-title-text">${livro.titulo}</div>
+        
+        <div class="book-title-text" style="margin-top: 4px;">${livro.titulo}</div>
         <div class="book-author">Ano: ${livro.ano_lancamento || 'N/A'} | ISBN: ${livro.ISBN}</div>
       </div>
     `;

@@ -2,7 +2,18 @@ const db = require('../config/db');
 
 class LivroModel {
   static async getAll() {
-    const [rows] = await db.query('SELECT * FROM livros');
+    const query = `
+      SELECT l.*, 
+             (COALESCE(l.quantidade, l.total_exemplares, 0) - (
+                SELECT COUNT(*) 
+                FROM emprestimos e 
+                WHERE e.id_exemplar = l.ISBN 
+                  AND e.data_devolucao_real IS NULL
+             )) AS exemplares_disponiveis
+      FROM livros l
+      ORDER BY l.id DESC
+    `;
+    const [rows] = await db.query(query);
     return rows;
   }
 
